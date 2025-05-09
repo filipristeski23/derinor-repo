@@ -49,7 +49,7 @@ function ProjectSectionMainSection() {
                 </div>
                 <div className="flex flex-col justify-between h-full pb-[1rem]">
                   <div className="flex flex-col gap-[0.5rem] pl-[1rem] pt-[1rem] pr-[1rem]">
-                    <text className="text-[#23272A] font-medium text-[0.875rem] w-full max-w-[16.875rem] leading-[1.75rem]">
+                    <text className="text-[#23272A] font-medium text-[0.875rem] w-full max-w-[16.875rem] h-[7rem]  max-h-[10rem] leading-[1.75rem]">
                       {project.description}
                     </text>
                     <h4 className="font-bold text-[#23272A] text-[0.875rem]">
@@ -58,7 +58,7 @@ function ProjectSectionMainSection() {
                   </div>
                   <div className="flex gap-[1rem] pl-[1rem] pr-[1rem] mt-auto">
                     <Link
-                      to="/register"
+                      to="/projects/generate-report"
                       className="flex align-middle justify-center h-[2.5rem]"
                     >
                       <button className="bg-[#3D6BC6] pl-[2rem] pr-[2rem] text-[0.875rem] text-[#F8FAFC] font-semibold cursor-pointer rounded-[0.4rem] leading-[1.75rem]">
