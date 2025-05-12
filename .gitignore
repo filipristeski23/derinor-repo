@@ -1,0 +1,22 @@
+﻿# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build outputs
+**/bin/
+**/obj/
+
+# NuGet
+**/packages/
+*.nupkg
+
+# OS files
+Thumbs.db
+desktop.ini
+
+# OneDrive-generated
+*.vsidx
+/Derinor.App/Derinor.Backend/Derinor.Presentation/appsettings.Development.json
