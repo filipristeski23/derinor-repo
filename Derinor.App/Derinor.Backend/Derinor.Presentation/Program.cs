@@ -1,3 +1,5 @@
+using Derinor.Application.ServiceImplementations;
+using Derinor.Application.ServiceInterfaces;
 using Derinor.BusinessLogic.ServiceImplementations;
 using Derinor.BusinessLogic.ServiceInterfaces;
 using Derinor.DataAccess;
@@ -43,9 +45,11 @@ builder.Services.AddSwaggerGen();
 
 //Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IProjectsRepository, ProjectsRepository>();
 
 //Services
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IProjectsService, ProjectsService>();
 
 
 

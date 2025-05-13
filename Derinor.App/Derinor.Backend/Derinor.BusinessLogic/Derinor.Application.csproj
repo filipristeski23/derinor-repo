@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Derinor.Common\Derinor.Common.csproj" />
     <ProjectReference Include="..\Derinor.DataAccess\Derinor.DataAccess.csproj" />
+    <ProjectReference Include="..\Derinor.Domain\Derinor.Domain.csproj" />
   </ItemGroup>
 
 </Project>
