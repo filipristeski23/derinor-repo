@@ -10,5 +10,9 @@ namespace Derinor.DataAccess.RepositoryInterfaces
     public interface IProjectsRepository
     {
         Task<List<Projects>> AllProjects();
+
+        Task<Projects> InsertProject(Projects projectDetails);
+
+        Task InsertBranches(ProjectBranches projectBranches);
     }
 }

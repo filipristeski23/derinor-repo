@@ -1,4 +1,5 @@
 ﻿using Derinor.Application.ServiceInterfaces;
+using Derinor.Common.RequestDTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Derinor.Presentation.Controllers
@@ -31,6 +32,20 @@ namespace Derinor.Presentation.Controllers
             }
         }
 
+        [HttpPost("create-project")]
+        public async Task<IActionResult> CreateProject([FromBody] CreateProjectDetailsRequestDTO projectDetails)
+        {
+            try
+            {
+                await _projectsService.CreateProject(projectDetails);
+                return Ok("Project Created Successfully");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Something is wrong with the creation of a new project");
+                return BadRequest("Something went wrong with the creation of a new project");
+            }
 
+        }
     }
 }

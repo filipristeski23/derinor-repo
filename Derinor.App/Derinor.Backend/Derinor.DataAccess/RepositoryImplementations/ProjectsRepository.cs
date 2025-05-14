@@ -22,5 +22,17 @@ namespace Derinor.DataAccess.RepositoryImplementations
             var fetchedProjects = await _appDbContext.Projects.ToListAsync();
             return fetchedProjects;
         }
+
+        public async Task<Projects> InsertProject(Projects projectDetails)
+        {
+            await _appDbContext.Projects.AddAsync(projectDetails);
+            await _appDbContext.SaveChangesAsync();
+            return projectDetails;
+        }
+
+        public async Task InsertBranches(ProjectBranches projectBranches)
+        {
+            await _appDbContext.ProjectBranches.AddAsync(projectBranches);
+        }
     }
 }

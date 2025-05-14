@@ -1,4 +1,5 @@
-﻿using Derinor.Common.ResponseDTOs;
+﻿using Derinor.Common.RequestDTOs;
+using Derinor.Common.ResponseDTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,7 @@ namespace Derinor.Application.ServiceInterfaces
     public interface IProjectsService
     {
         Task<List<ProjectHomeResponseDTO>> AllProjects();
+
+        Task CreateProject(CreateProjectDetailsRequestDTO projectDetails);
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Derinor.Application.ServiceInterfaces;
+using Derinor.Common.RequestDTOs;
 using Derinor.Common.ResponseDTOs;
 using Derinor.DataAccess.RepositoryInterfaces;
+using Derinor.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +32,27 @@ namespace Derinor.Application.ServiceImplementations
             }).ToList();;
 
             return fetchedProjectsDTO;
+        }
+
+        public async Task CreateProject(CreateProjectDetailsRequestDTO projectDetails)
+        {
+            var newProject = new Projects
+            {
+                ProjectOwner = projectDetails.projectOwner,
+                ProjectName = projectDetails.projectName,
+                ProjectDescription = projectDetails.projectDescription,
+            };
+
+            var insertedProjectData = await _projectsRepository.InsertProject(newProject);
+
+            var newBranches = new ProjectBranches
+            {
+                ProjectProductionBranch = projectDetails.projectBranches.projectProductionBranch,
+                ProjectRepository = projectDetails.projectBranches.projectRepository,
+                ProjectID = insertedProjectData.ProjectID,
+            };
+
+            await _projectsRepository.InsertBranches(newBranches);
         }
     }
 }
