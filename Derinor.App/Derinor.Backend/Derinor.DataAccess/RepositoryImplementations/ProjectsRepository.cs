@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Derinor.DataAccess.RepositoryImplementations
 {
@@ -17,10 +18,16 @@ namespace Derinor.DataAccess.RepositoryImplementations
             _appDbContext = appDbContext;
         }
 
-        public async Task<List<Projects>> AllProjects()
+        public async Task<List<Projects>> AllProjects(string? searchData)
         {
-            var fetchedProjects = await _appDbContext.Projects.ToListAsync();
-            return fetchedProjects;
+            var fetchedProjects = _appDbContext.Projects.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchData))
+            {
+                fetchedProjects = fetchedProjects.Where(p => p.ProjectName.Contains(searchData));
+            }
+
+            return await fetchedProjects.ToListAsync();
         }
 
         public async Task<Projects> InsertProject(Projects projectDetails)

@@ -12,6 +12,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Derinor.BusinessLogic.ServiceImplementations
 {
@@ -30,10 +31,12 @@ namespace Derinor.BusinessLogic.ServiceImplementations
         public string OpenGithub()
         {
             var clientID = _configuration["GithubOAuth:ClientId"];
-            var redirectUri = Uri.EscapeDataString(_configuration["GithubOAuth:RedirectUri"]);
-            var scope = "";
+            var redirectUri = _configuration["GithubOAuth:RedirectUri"];
+            var scope = "read:user user:email repo repo:status repo_deployment";
+            return $"https://github.com/login/oauth/authorize?client_id={clientID}&redirect_uri={redirectUri}&scope={scope}";
 
-            return $"https://github.com/login/oauth/authorize?client_id=clientID&redirect_uri=redirectUri&scope=scope";
+
+            return $"https://github.com/login/oauth/authorize?client_id={clientID}&redirect_uri={redirectUri}&scope={scope}";
         }
 
         public async Task<GithubTokenResponse>ExchangeCodeForToken(string code)
@@ -44,9 +47,9 @@ namespace Derinor.BusinessLogic.ServiceImplementations
             var paremeters = new Dictionary<string, string>
             {
                 {"code", code },
-                {"client_id", _configuration["GithubOAuth: ClientId"] },
-                {"client_secret",_configuration["GithubOAuth: ClientSecret"]  },
-                {"redirect-uri", _configuration["GithubOAuth: RedirectUri"] }
+                {"client_id", _configuration["GithubOAuth:ClientId"] },
+                {"client_secret",_configuration["GithubOAuth:ClientSecret"]  },
+                {"redirect_uri", _configuration["GithubOAuth:RedirectUri"] }
 
             };
 
@@ -54,8 +57,16 @@ namespace Derinor.BusinessLogic.ServiceImplementations
             var response = await client.SendAsync(request);
 
             if (!response.IsSuccessStatusCode) return null;
+
             var content = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<GithubTokenResponse>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var formData = HttpUtility.ParseQueryString(content);
+
+            return new GithubTokenResponse
+            {
+                AccessToken = formData["access_token"],
+                Scope = formData["scope"],
+                TokenType = formData["token_type"]
+            };
 
         }
 
@@ -74,6 +85,8 @@ namespace Derinor.BusinessLogic.ServiceImplementations
 
             var githubID = githubUser.GithubID;
             var fullName = githubUser.FullName;
+            var githubUsername = githubUser.Login;
+            var accessToken = githubTokenResponse.AccessToken;
 
             var user = await _userRepository.GetByGithubID(githubID);
 
@@ -84,6 +97,8 @@ namespace Derinor.BusinessLogic.ServiceImplementations
                 {
                     GithubID = githubID,
                     FullName = fullName,
+                    GithubAccessToken = accessToken,
+                    GithubUsername = githubUsername,
                 };
 
                 await _userRepository.AddUser(user);
@@ -93,6 +108,8 @@ namespace Derinor.BusinessLogic.ServiceImplementations
 
                 user.FullName = fullName;
                 user.GithubID = githubID;
+                user.GithubAccessToken = accessToken;
+                user.GithubUsername = githubUsername;
 
                 await _userRepository.UpdateUser(user);
             }

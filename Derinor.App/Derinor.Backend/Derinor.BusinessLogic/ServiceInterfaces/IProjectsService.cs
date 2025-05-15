@@ -10,8 +10,18 @@ namespace Derinor.Application.ServiceInterfaces
 {
     public interface IProjectsService
     {
-        Task<List<ProjectHomeResponseDTO>> AllProjects();
+        Task<List<ProjectHomeResponseDTO>> AllProjects(string? searchData);
 
-        Task CreateProject(CreateProjectDetailsRequestDTO projectDetails);
+        Task CreateProject(CreateProjectDetailsRequestDTO projectDetails, int userID);
+
+        Task<GeneratedReportDataRequestDTO> GenerateReport(int userID, int projectID);
+
+        Task<List<GithubCommitResponseDTO>> GetGithubCommits(int userID, int projectID);
+
+        Task<GeminiDataResponseDTO> GetGeminiData(int userID, int projectID);
+
+        Task<List<GithubRepositoryResponseDTO>> FetchRepositories(int userID);
+
+        Task<List<GithubBranchesResponseDTO>> FetchBranches(int userID, string repositoryName);
     }
 }

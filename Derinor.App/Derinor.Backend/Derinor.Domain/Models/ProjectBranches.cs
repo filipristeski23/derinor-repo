@@ -15,8 +15,7 @@ namespace Derinor.Domain.Models
         public int ProjectBranchesID { get; set; }
         public string ProjectRepository {  get; set; }
         public string ProjectProductionBranch { get; set; }
-        public DateOnly StartingDate { get; set; }
-        public DateOnly EndingDate { get; set; }
+        public DateTime StartingDate { get; set; }
 
 
         public int ProjectID { get; set; }

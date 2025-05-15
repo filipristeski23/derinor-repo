@@ -16,5 +16,8 @@ namespace Derinor.Common.ResponseDTOs
         [JsonPropertyName("id")]
         public int GithubID { get; set; }
 
+        [JsonPropertyName("login")]
+        public string Login { get; set; }
+
     }
 }

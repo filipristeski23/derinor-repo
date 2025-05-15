@@ -19,6 +19,8 @@ namespace Derinor.Domain.Models
         [StringLength(50)]
         public string? FullName { get; set; }
         public int GithubID { get; set; }
+        public string GithubUsername { get; set; }
+        public string GithubAccessToken { get; set; }
 
         public ICollection<Projects> Projects { get; set; }
 

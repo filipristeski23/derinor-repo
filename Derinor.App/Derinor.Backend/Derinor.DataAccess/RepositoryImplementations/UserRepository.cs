@@ -36,5 +36,17 @@ namespace Derinor.DataAccess.RepositoryImplementations
             var existingGithubUser = await _appDbContext.Users.FindAsync(githubID);
             return existingGithubUser;
         }
+
+        public async Task<Projects> GetFetchingDetails(int userID, int projectID)
+        {
+            var theDetails = await _appDbContext.Projects.Include(p => p.Users).Include(p => p.ProjectBranches).Where(p => p.UserID == userID && p.ProjectID == projectID).FirstOrDefaultAsync();
+            return theDetails;
+        }
+
+        public async Task<Users> GetUsernameByUserID(int userID)
+        {
+            var data = await _appDbContext.Users.Where(u => u.UserID == userID).FirstOrDefaultAsync();
+            return data;
+        }
     }
 }
