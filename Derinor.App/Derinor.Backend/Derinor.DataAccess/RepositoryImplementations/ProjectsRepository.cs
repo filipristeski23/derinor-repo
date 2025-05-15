@@ -40,6 +40,7 @@ namespace Derinor.DataAccess.RepositoryImplementations
         public async Task InsertBranches(ProjectBranches projectBranches)
         {
             await _appDbContext.ProjectBranches.AddAsync(projectBranches);
+            await _appDbContext.SaveChangesAsync();
         }
     }
 }

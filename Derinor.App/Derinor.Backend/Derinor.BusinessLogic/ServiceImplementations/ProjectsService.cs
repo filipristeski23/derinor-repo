@@ -61,6 +61,7 @@ namespace Derinor.Application.ServiceImplementations
                 ProjectProductionBranch = projectDetails.projectBranches.projectProductionBranch,
                 ProjectRepository = projectDetails.projectBranches.projectRepository,
                 ProjectID = insertedProjectData.ProjectID,
+                StartingDate = projectDetails.startingDate,
             };
 
             await _projectsRepository.InsertBranches(newBranches);

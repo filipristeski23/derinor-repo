@@ -14,11 +14,11 @@ namespace Derinor.Common.RequestDTOs
 
         public string projectDescription { get; set; }
 
-        public ProjectBranches projectBranches { get; set; }
+        public ProjectBranchesDTO projectBranches { get; set; }
 
         public DateTime startingDate { get; set; }
 
-        public class ProjectBranches {
+        public class ProjectBranchesDTO {
             public string projectRepository { get; set; }
             public string projectProductionBranch { get; set; }
         }
