@@ -41,17 +41,17 @@ function ProjectSectionMainSection() {
               >
                 <div className="bg-[#3D6BC6] w-full h-[9.5rem] rounded-tr-[1rem] rounded-tl-[1rem] rounded-bl-[0rem] rounded-br-[0rem] pt-[1rem] pl-[1rem] pr-[1rem] pb-[1rem] flex flex-col gap-[0.5rem]">
                   <div className="bg-[#D570CC] w-fit inline-block pt-[0.125rem] pb-[0.125rem] pl-[0.75rem] pr-[0.75rem] rounded-[50rem] text-[#F8FAFD] font-semibold">
-                    {project.owner}
+                    {project.projectOwner}
                   </div>
                   <h2 className="text-[#F8FAFD] text-[1.75rem] font-bold h-[5rem] overflow-hidden leading-[2.5rem]">
-                    {project.name}
+                    {project.projectName}
                   </h2>
                 </div>
                 <div className="flex flex-col justify-between h-full pb-[1rem]">
                   <div className="flex flex-col gap-[0.5rem] pl-[1rem] pt-[1rem] pr-[1rem]">
-                    <text className="text-[#23272A] font-medium text-[0.875rem] w-full max-w-[16.875rem] h-[7rem]  max-h-[10rem] leading-[1.75rem]">
-                      {project.description}
-                    </text>
+                    <p className="text-[#23272A] font-medium text-[0.875rem] w-full max-w-[16.875rem] h-[7rem]  max-h-[10rem] leading-[1.75rem]">
+                      {project.projectDescription}
+                    </p>
                     <h4 className="font-bold text-[#23272A] text-[0.875rem]">
                       {project.reports} Reports
                     </h4>

@@ -10,7 +10,6 @@ export const useSendProjectDetails = () => {
     repositoryName: "",
     branchID: "",
     branchName: "",
-    branchStatus: "",
   });
 
   const [selectedRepository, setSelectedRepository] = useState(null);
@@ -36,7 +35,6 @@ export const useSendProjectDetails = () => {
       ...prev,
       branchID: branch.branchID,
       branchName: branch.branchName,
-      branchStatus: "production",
     }));
   };
 

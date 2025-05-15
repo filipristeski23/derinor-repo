@@ -1,10 +1,10 @@
 import axios from "axios";
 
-const api = `https://e3a13a61-b8f7-421a-9035-4cd12976dc4e.mock.pstmn.io/api`;
+const api = `https://localhost:7113/`;
 
 export const searchProjectService = {
   fetchProjects: async (searchProjectData) => {
-    const projectsData = await axios.get(`${api}/projects`, {
+    const projectsData = await axios.get(`${api}projects/all-projects`, {
       params: searchProjectData ? { search: searchProjectData } : {},
     });
     return projectsData.data;
