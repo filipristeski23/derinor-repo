@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createProjectService } from "../services/createProjectService";
 import { useEffect } from "react";
 
 export const useSendProjectDetails = () => {
@@ -6,10 +7,11 @@ export const useSendProjectDetails = () => {
     projectOwner: "",
     projectDescription: "",
     projectName: "",
-    repositoryID: "",
-    repositoryName: "",
-    branchID: "",
-    branchName: "",
+    startingDate: new Date().toISOString(),
+    projectBranches: {
+      projectRepository: "",
+      projectProductionBranch: "",
+    },
   });
 
   const [selectedRepository, setSelectedRepository] = useState(null);
@@ -18,8 +20,10 @@ export const useSendProjectDetails = () => {
     setSelectedRepository(repo);
     setProjectData((prev) => ({
       ...prev,
-      repositoryID: repo.repoID,
-      repositoryName: repo.repoName,
+      projectBranches: {
+        ...prev.projectBranches,
+        projectRepository: repo.repoName,
+      },
     }));
   };
 
@@ -33,14 +37,20 @@ export const useSendProjectDetails = () => {
   const updateBranchStatuses = (branch) => {
     setProjectData((prev) => ({
       ...prev,
-      branchID: branch.branchID,
-      branchName: branch.branchName,
+      projectBranches: {
+        ...prev.projectBranches,
+        projectProductionBranch: branch.branchName,
+      },
     }));
   };
 
   useEffect(() => {
-    console.log("projectData in browser console:", projectData);
+    console.log("projectData updated:", projectData);
   }, [projectData]);
+
+  const sendProject = async () => {
+    await createProjectService.postProjectDetails(projectData);
+  };
 
   return {
     projectData,
@@ -50,5 +60,6 @@ export const useSendProjectDetails = () => {
     selectRepository,
     updateBranchStatuses,
     setProjectData,
+    sendProject,
   };
 };

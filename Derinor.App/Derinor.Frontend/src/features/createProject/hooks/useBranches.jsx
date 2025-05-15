@@ -8,8 +8,7 @@ export const useBranches = (repositoryName) => {
     const fetchBranches = async () => {
       const data = await createProjectService.fetchBranches(repositoryName);
       const formattedBranchData = data.map((branch) => ({
-        repoID: branch.repoId,
-        branchID: branch.id,
+        branchID: branch.name,
         branchName: branch.name,
       }));
 

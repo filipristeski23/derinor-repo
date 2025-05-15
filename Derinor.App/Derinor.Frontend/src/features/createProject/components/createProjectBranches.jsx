@@ -7,10 +7,10 @@ import { useState } from "react";
 
 export default function CreateProjectBranches() {
   const navigate = useNavigate();
-  const { selectedRepository, updateBranchStatuses } = useOutletContext();
+  const { selectedRepository, sendProject, updateBranchStatuses } =
+    useOutletContext();
   const branches = useBranches(selectedRepository?.repoName);
-
-  const [productionBranchId, setProductionBranchId] = useState("");
+  const [selectedBranchName, setSelectedBranchName] = useState("");
 
   useEffect(() => {
     if (!selectedRepository) {
@@ -18,26 +18,16 @@ export default function CreateProjectBranches() {
     }
   }, [selectedRepository, navigate]);
 
-  useEffect(() => {
-    if (productionBranchId) {
-      const chosen = branches.find((b) => b.branchID === productionBranchId);
-      if (chosen) {
-        updateBranchStatuses({
-          branchID: chosen.branchID,
-          branchName: chosen.branchName,
-        });
-      }
-    }
-  }, [productionBranchId, branches]);
-
   const handleSelect = (e) => {
-    setProductionBranchId(Number(e.target.value));
+    const name = e.target.value;
+    setSelectedBranchName(name);
+    updateBranchStatuses({ branchName: name });
   };
 
   return (
     <div className="flex flex-col gap-[2rem]">
       <h2 className="text-[#23272A] font-bold text-[2rem]">
-        Configure branches for {selectedRepository?.repoName}
+        Select production branch
       </h2>
       <div>
         <div className="flex flex-col gap-[1rem]">
@@ -47,16 +37,16 @@ export default function CreateProjectBranches() {
                 <div className="flex flex-col gap-[1rem]">
                   {branches.map((branch) => (
                     <label
-                      key={branch.branchID}
+                      key={branch.branchName}
                       className="cursor-pointer flex items-center bg-[#3D6BC6] h-[2.5rem] pl-[1.125rem] pr-[1.125rem] rounded-[0.5rem] text-[#F8FAFC]"
                     >
                       <input
                         type="radio"
                         name="productionBranch"
-                        value={branch.branchID}
-                        checked={productionBranchId === branch.branchID}
+                        value={branch.branchName}
+                        checked={selectedBranchName === branch.branchName}
                         onChange={handleSelect}
-                        className="form-radio appearance-none "
+                        className="form-radio appearance-none"
                       />
                       <span className="font-[1rem] text-[#F8FAFC]">
                         {branch.branchName}
@@ -71,10 +61,10 @@ export default function CreateProjectBranches() {
           </div>
           <div className="flex flex-col gap-[2rem] items-start">
             <button
-              onClick={() => navigate("../repositories")}
+              onClick={sendProject}
               className="bg-[#3D6BC6] text-white h-[2.5rem] px-[1.5rem] rounded-[0.5rem] cursor-pointer font-regular inline-block"
             >
-              Back to Repositories
+              Finish
             </button>
           </div>
         </div>
