@@ -9,4 +9,11 @@ export const searchProjectService = {
     });
     return projectsData.data;
   },
+
+  fetchGemini: async (projectID) => {
+    const geminiData = await axios.get(`${api}projects/get-gemini-data`, {
+      params: projectID ? { project: projectID } : {},
+    });
+    return geminiData.data;
+  },
 };

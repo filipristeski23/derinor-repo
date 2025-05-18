@@ -2,13 +2,17 @@ import SearchIcon from "../../../assets/icons/SearchIcon.svg";
 import PageArrowButton from "../../../assets/icons/PageArrowButton.svg";
 import { Link } from "react-router-dom";
 import { useSearchProjects } from "../hooks/useSearchProjects";
+import { UseSendGeminiData } from "../../generateReport/hooks/useSendGeminiData";
+import { useGenerateReportStore } from "../../generateReport/store/useGenerateReportStore";
 
 function ProjectSectionMainSection() {
   const { searchProjectData, setSearchProjectData, projectData } =
     useSearchProjects();
+  const setProjectID = useGenerateReportStore((s) => s.setProjectID);
+
   return (
     <div className="max-w-full pt-[2rem] pb-[2rem] bg-[#F8FAFD]">
-      <div className="max-w-[78.5rem] h-[20rem] max-h-screen mx-auto my-0 flex flex-col gap-[2rem]">
+      <div className="max-w-[78.5rem] h-max h-[25.063rem] max-h-screen mx-auto my-0 flex flex-col gap-[2rem]">
         <div className="w-full flex justify-between">
           <div className="relative w-full max-w-[37.5rem]">
             <input
@@ -32,12 +36,15 @@ function ProjectSectionMainSection() {
           </Link>
         </div>
 
-        <div className=" w-full flex gap-[1rem]">
+        <div
+          className="w-full flex gap-[1rem] h-[25.063rem] overflow-x-auto overflow-y-hidden scrollbar-hide scroll-smooth [&::-webkit-scrollbar]:hidden [scrollbar-width:none]"
+          id="project-scroll-container"
+        >
           {projectData && projectData.length > 0 ? (
-            projectData.map((project, index) => (
+            projectData.map((project) => (
               <div
-                key={index}
-                className="flex flex-col w-full max-w-[18.875rem] h-[24.063rem] rounded-[1rem] shadow-[0_4px_8px_rgba(0,0,0,0.1)]"
+                key={project.projectID}
+                className="flex flex-col w-full max-w-[18.875rem] h-[24.063rem] rounded-[1rem] shadow-[0_4px_8px_rgba(0,0,0,0.1)] flex-shrink-0"
               >
                 <div className="bg-[#3D6BC6] w-full h-[9.5rem] rounded-tr-[1rem] rounded-tl-[1rem] rounded-bl-[0rem] rounded-br-[0rem] pt-[1rem] pl-[1rem] pr-[1rem] pb-[1rem] flex flex-col gap-[0.5rem]">
                   <div className="bg-[#D570CC] w-fit inline-block pt-[0.125rem] pb-[0.125rem] pl-[0.75rem] pr-[0.75rem] rounded-[50rem] text-[#F8FAFD] font-semibold">
@@ -61,7 +68,10 @@ function ProjectSectionMainSection() {
                       to="/projects/generate-report"
                       className="flex align-middle justify-center h-[2.5rem]"
                     >
-                      <button className="bg-[#3D6BC6] pl-[2rem] pr-[2rem] text-[0.875rem] text-[#F8FAFC] font-semibold cursor-pointer rounded-[0.4rem] leading-[1.75rem]">
+                      <button
+                        className="bg-[#3D6BC6] pl-[2rem] pr-[2rem] text-[0.875rem] text-[#F8FAFC] font-semibold cursor-pointer rounded-[0.4rem] leading-[1.75rem]"
+                        onClick={() => setProjectID(project.projectID)}
+                      >
                         New Report
                       </button>
                     </Link>
@@ -83,10 +93,22 @@ function ProjectSectionMainSection() {
         </div>
 
         <div className="flex gap-[1.5rem]">
-          <button className="h-[2.5rem] bg-[#3D6BC6] pl-[1.125rem] pr-[1.125rem] rounded-[0.5rem] cursor-pointer">
+          <button
+            className="h-[2.5rem] bg-[#3D6BC6] pl-[1.125rem] pr-[1.125rem] rounded-[0.5rem] cursor-pointer"
+            onClick={() => {
+              const el = document.getElementById("project-scroll-container");
+              el?.scrollBy({ left: -1272, behavior: "smooth" });
+            }}
+          >
             <img src={PageArrowButton} alt="Arrow" />
           </button>
-          <button className="h-[2.5rem] bg-[#3D6BC6] pl-[1.125rem] pr-[1.125rem] rounded-[0.5rem] cursor-pointer">
+          <button
+            className="h-[2.5rem] bg-[#3D6BC6] pl-[1.125rem] pr-[1.125rem] rounded-[0.5rem] cursor-pointer"
+            onClick={() => {
+              const el = document.getElementById("project-scroll-container");
+              el?.scrollBy({ left: 1272, behavior: "smooth" });
+            }}
+          >
             <img src={PageArrowButton} alt="Arrow" className="rotate-180" />
           </button>
         </div>
