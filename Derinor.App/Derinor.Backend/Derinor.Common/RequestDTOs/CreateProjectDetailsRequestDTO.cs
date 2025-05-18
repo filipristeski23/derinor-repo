@@ -16,8 +16,6 @@ namespace Derinor.Common.RequestDTOs
 
         public ProjectBranchesDTO projectBranches { get; set; }
 
-        public DateTime startingDate { get; set; }
-
         public class ProjectBranchesDTO {
             public string projectRepository { get; set; }
             public string projectProductionBranch { get; set; }

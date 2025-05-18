@@ -9,7 +9,7 @@ namespace Derinor.DataAccess.RepositoryInterfaces
 {
     public interface IProjectsRepository
     {
-        Task<List<Projects>> AllProjects(string? searchData);
+        Task<List<Projects>> AllProjects(string? search);
 
         Task<Projects> InsertProject(Projects projectDetails);
 

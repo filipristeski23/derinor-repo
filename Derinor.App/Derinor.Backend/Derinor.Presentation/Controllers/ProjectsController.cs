@@ -19,11 +19,11 @@ namespace Derinor.Presentation.Controllers
         }
 
         [HttpGet("all-projects")]
-        public async Task<IActionResult> AllProjects([FromQuery] string? searchData)
+        public async Task<IActionResult> AllProjects([FromQuery] string? search)
         {
             try
             {
-                var fetchedApartments = await _projectsService.AllProjects(searchData);
+                var fetchedApartments = await _projectsService.AllProjects(search);
                 return Ok(fetchedApartments);
             }
             catch (Exception ex)
@@ -53,19 +53,13 @@ namespace Derinor.Presentation.Controllers
         }
 
         [HttpGet("get-gemini-data")]
-        public async Task<IActionResult> GetGeminiData(int projectID)
+        public async Task<IActionResult> GetGeminiData([FromQuery] int projectID)
         {
             try
             {
 
-                var userIDString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                if (!int.TryParse(userIDString, out int userID))
-                {
-                    _logger.LogWarning("Invalid user ID format from frontend: {UserID}", userIDString);
-                    return Unauthorized("Invalid Data");
-                }
-
-                var generatedReport = await _projectsService.GenerateReport(userID, projectID);
+                var userID = 1;
+                var generatedReport = await _projectsService.GetGeminiData(userID, projectID);
                 return Ok(generatedReport);
             }
             catch (Exception ex)

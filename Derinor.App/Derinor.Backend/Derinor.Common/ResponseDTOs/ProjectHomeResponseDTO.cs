@@ -11,5 +11,6 @@ namespace Derinor.Common.ResponseDTOs
         public string projectOwner { get; set; }
         public string projectName { get; set; }
         public string projectDescription { get; set; }
+        public int projectID { get; set; }
     }
 }
