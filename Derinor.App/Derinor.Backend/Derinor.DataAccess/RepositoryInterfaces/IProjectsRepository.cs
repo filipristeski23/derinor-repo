@@ -14,5 +14,9 @@ namespace Derinor.DataAccess.RepositoryInterfaces
         Task<Projects> InsertProject(Projects projectDetails);
 
         Task InsertBranches(ProjectBranches projectBranches);
+
+        Task PublishProject(ProjectReports projectReports);
+
+        Task<List<ProjectReports>> GetReportsByProject(int projectID);
     }
 }

@@ -21,8 +21,9 @@ namespace Derinor.BusinessLogic.ServiceImplementations
         private readonly IConfiguration _configuration;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IUserRepository _userRepository;
-        public AuthService(IConfiguration configuration, IHttpClientFactory httpClientFactory, IUserRepository userRepository) {
-        
+        public AuthService(IConfiguration configuration, IHttpClientFactory httpClientFactory, IUserRepository userRepository)
+        {
+
             _configuration = configuration;
             _httpClientFactory = httpClientFactory;
             _userRepository = userRepository;
@@ -34,12 +35,9 @@ namespace Derinor.BusinessLogic.ServiceImplementations
             var redirectUri = _configuration["GithubOAuth:RedirectUri"];
             var scope = "read:user user:email repo repo:status repo_deployment";
             return $"https://github.com/login/oauth/authorize?client_id={clientID}&redirect_uri={redirectUri}&scope={scope}";
-
-
-            return $"https://github.com/login/oauth/authorize?client_id={clientID}&redirect_uri={redirectUri}&scope={scope}";
         }
 
-        public async Task<GithubTokenResponse>ExchangeCodeForToken(string code)
+        public async Task<GithubTokenResponse> ExchangeCodeForToken(string code)
         {
             var client = _httpClientFactory.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Post, "https://github.com/login/oauth/access_token");
@@ -50,24 +48,17 @@ namespace Derinor.BusinessLogic.ServiceImplementations
                 {"client_id", _configuration["GithubOAuth:ClientId"] },
                 {"client_secret",_configuration["GithubOAuth:ClientSecret"]  },
                 {"redirect_uri", _configuration["GithubOAuth:RedirectUri"] }
-
             };
 
             request.Content = new FormUrlEncodedContent(paremeters);
+            request.Headers.Add("Accept", "application/json");
             var response = await client.SendAsync(request);
 
             if (!response.IsSuccessStatusCode) return null;
 
             var content = await response.Content.ReadAsStringAsync();
-            var formData = HttpUtility.ParseQueryString(content);
-
-            return new GithubTokenResponse
-            {
-                AccessToken = formData["access_token"],
-                Scope = formData["scope"],
-                TokenType = formData["token_type"]
-            };
-
+            var tokenResponse = JsonSerializer.Deserialize<GithubTokenResponse>(content);
+            return tokenResponse;
         }
 
         public async Task<string> GetOrCreateUserFromGithubToken(GithubTokenResponse githubTokenResponse)
@@ -84,7 +75,7 @@ namespace Derinor.BusinessLogic.ServiceImplementations
             var githubUser = JsonSerializer.Deserialize<GithubUserResponse>(content);
 
             var githubID = githubUser.GithubID;
-            var fullName = githubUser.FullName;
+            var fullName = githubUser.FullName ?? githubUser.Login;
             var githubUsername = githubUser.Login;
             var accessToken = githubTokenResponse.AccessToken;
 
@@ -92,8 +83,7 @@ namespace Derinor.BusinessLogic.ServiceImplementations
 
             if (user == null)
             {
-                
-                user = new Users
+                var newUser = new Users
                 {
                     GithubID = githubID,
                     FullName = fullName,
@@ -101,35 +91,29 @@ namespace Derinor.BusinessLogic.ServiceImplementations
                     GithubUsername = githubUsername,
                 };
 
-                await _userRepository.AddUser(user);
+                user = await _userRepository.AddUser(newUser);
             }
             else
             {
-
                 user.FullName = fullName;
-                user.GithubID = githubID;
                 user.GithubAccessToken = accessToken;
                 user.GithubUsername = githubUsername;
-
                 await _userRepository.UpdateUser(user);
             }
 
             return await GenerateJwtToken(user);
-
         }
 
         public async Task<string> GenerateJwtToken(Users user)
         {
-
             var claims = new[]
             {
-                    new Claim(ClaimTypes.Name, user.FullName),
-                    new Claim(ClaimTypes.NameIdentifier, user.UserID.ToString()),
-                    new Claim("githubID", user.GithubID.ToString())
+                new Claim(ClaimTypes.Name, user.FullName),
+                new Claim(ClaimTypes.NameIdentifier, user.UserID.ToString()),
+                new Claim("githubID", user.GithubID.ToString())
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]));
-
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
@@ -143,6 +127,4 @@ namespace Derinor.BusinessLogic.ServiceImplementations
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
-
-    }
-
+}

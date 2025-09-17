@@ -1,11 +1,12 @@
 ﻿using Derinor.BusinessLogic.ServiceInterfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace Derinor.Presentation.Controllers
 {
 
-    [ApiController]
+    
     [Route("/auth")]
     public class AuthController : ControllerBase
     {
@@ -54,13 +55,19 @@ namespace Derinor.Presentation.Controllers
                 }
 
                 var jwt = await _authService.GetOrCreateUserFromGithubToken(tokenResponse);
+                var user = new
+                {
+                    name = "Filip",
+                    surname = "Risteski"
+                };
+                var userData = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(JsonSerializer.Serialize(user)));
 
-                return Ok(new { token = jwt });
+                return Redirect($"http://localhost:5173/auth/callback?token={jwt}&user={userData}");
             }
             catch (Exception ex)
             {
 
-                return StatusCode(500, "Something went wrong with the github sign in, please try again later");
+                return StatusCode(500, "Something went wrong with the github sign in, please try again later"); 
             }
 
 

@@ -1,5 +1,6 @@
 ﻿using Derinor.Application.ServiceInterfaces;
 using Derinor.Common.RequestDTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -13,100 +14,88 @@ namespace Derinor.Presentation.Controllers
         private readonly ILogger<ProjectsController> _logger;
         public ProjectsController(IProjectsService projectsService, ILogger<ProjectsController> logger)
         {
-
             _projectsService = projectsService;
             _logger = logger;
         }
 
         [HttpGet("all-projects")]
+        [Authorize]
         public async Task<IActionResult> AllProjects([FromQuery] string? search)
         {
-            try
-            {
-                var fetchedApartments = await _projectsService.AllProjects(search);
-                return Ok(fetchedApartments);
-            }
-            catch (Exception ex)
-            {
-
-                _logger.LogError(ex, "Something is wrong with fetchin all projects");
-                return BadRequest("Something went wrong with fetching the projects");
-            }
+            var fetchedProjects = await _projectsService.AllProjects(search);
+            return Ok(fetchedProjects);
         }
 
         [HttpPost("create-project")]
+        [Authorize]
         public async Task<IActionResult> CreateProject([FromBody] CreateProjectDetailsRequestDTO projectDetails)
         {
-            try
-            {
-                var userID = 1;
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            var userID = int.Parse(userIdClaim.Value);
 
-                await _projectsService.CreateProject(projectDetails, userID);
-                return Ok("Project Created Successfully");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Something is wrong with the creation of a new project");
-                return BadRequest("Something went wrong with the creation of a new project");
-            }
-
+            await _projectsService.CreateProject(projectDetails, userID);
+            return Ok("Project Created Successfully");
         }
 
-        [HttpGet("get-gemini-data")]
-        public async Task<IActionResult> GetGeminiData([FromQuery] int projectID)
+        [HttpPost("get-gemini-data")]
+        [Authorize]
+        public async Task<IActionResult> GetGeminiData([FromBody] GenerateReportRequestDTO request)
         {
-            try
-            {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            var userID = int.Parse(userIdClaim.Value);
 
-                var userID = 1;
-                var generatedReport = await _projectsService.GetGeminiData(userID, projectID);
-                return Ok(generatedReport);
-            }
-            catch (Exception ex)
+            var projectID = request.projectID;
+            var startDate = request.startDate;
+            var endDate = request.endDate;
+
+            var serviceRequest = new GenerateReportRequestDTO
             {
-                _logger.LogError(ex, "Something is wrong with the generation of a report");
-                return BadRequest("Something went wrong with the generation of a report");
-            }
+                projectID = projectID,
+                startDate = new DateTime(startDate.Year, startDate.Month, startDate.Day, 0, 0, 0, DateTimeKind.Utc),
+                endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59, 999, DateTimeKind.Utc)
+            };
+
+            var generatedReport = await _projectsService.GetGeminiData(userID, serviceRequest);
+
+            return Ok(generatedReport);
         }
 
         [HttpGet("fetch-repositories")]
+        [Authorize]
         public async Task<IActionResult> FetchRepositories()
         {
-            try
-            {
-                var userID = 1;
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            var userID = int.Parse(userIdClaim.Value);
 
-                var fetchedRepositories = await _projectsService.FetchRepositories(userID);
-                return Ok(fetchedRepositories);
-            }
-            catch (Exception ex)
-            {
-
-                _logger.LogError(ex, "Something is wrong with the fetching of repositories");
-                return BadRequest("Something is wrong with the fetching of repositories");
-
-            }
-
+            var fetchedRepositories = await _projectsService.FetchRepositories(userID);
+            return Ok(fetchedRepositories);
         }
 
         [HttpGet("fetch-branches")]
+        [Authorize]
         public async Task<IActionResult> FetchBranches([FromQuery] string repositoryName)
         {
-            try
-            {
-                var userID = 1;
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            var userID = int.Parse(userIdClaim.Value);
 
-                var fetchedBranches = await _projectsService.FetchBranches(userID, repositoryName);
-                return Ok(fetchedBranches);
-            }
-            catch (Exception ex)
-            {
+            var fetchedBranches = await _projectsService.FetchBranches(userID, repositoryName);
+            return Ok(fetchedBranches);
+        }
 
-                _logger.LogError(ex, "Something is wrong with the fetching of branches");
-                return BadRequest("Something is wrong with the fetching of branches");
+        [HttpPost("publish-report")]
+        [Authorize]
+        public async Task<IActionResult> PublishProject([FromBody] PublishProjectDTO publishProjectDTO)
+        {
 
-            }
+            await _projectsService.PublishProject(publishProjectDTO);
+            return Ok("Project Published Successfully");
+        }
 
+        [HttpGet("all-by-project/{projectID}")]
+        public async Task<IActionResult> GetReportsByProject(int projectID)
+        {
+            var projects = await _projectsService.GetReportsByProject(projectID);
+            return Ok(projects);
         }
     }
 }

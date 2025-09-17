@@ -44,5 +44,17 @@ namespace Derinor.DataAccess.RepositoryImplementations
             await _appDbContext.ProjectBranches.AddAsync(projectBranches);
             await _appDbContext.SaveChangesAsync();
         }
+
+        public async Task PublishProject(ProjectReports projectReports)
+        {
+            await _appDbContext.ProjectReports.AddAsync(projectReports);
+            await _appDbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<ProjectReports>> GetReportsByProject(int projectID)
+        {
+            return await _appDbContext.ProjectReports.Where(r => r.ProjectID == projectID).ToListAsync();
+        }
+
     }
 }
