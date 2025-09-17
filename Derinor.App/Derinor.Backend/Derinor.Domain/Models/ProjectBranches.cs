@@ -15,9 +15,6 @@ namespace Derinor.Domain.Models
         public int ProjectBranchesID { get; set; }
         public string ProjectRepository {  get; set; }
         public string ProjectProductionBranch { get; set; }
-        public DateTime StartingDate { get; set; }
-
-
         public int ProjectID { get; set; }
 
         [ForeignKey("ProjectID")]

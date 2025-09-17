@@ -14,8 +14,6 @@ namespace Derinor.Domain.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ProjectReportID { get; set; }
         public string ProjectReportDescription { get; set; }
-
-
         public int ProjectID { get; set; }
 
         [ForeignKey("ProjectID")]
