@@ -1,8 +1,12 @@
 import React from "react";
-import { useBackToRepositories } from "../hooks/useBackToRepositories";
+import { useNavigate } from "react-router-dom";
 
 export default function BackToRepositories() {
-  const backToRepositories = useBackToRepositories();
+  const navigate = useNavigate();
+
+  const backToRepositories = () => {
+    navigate("/projects/create-project/repositories");
+  };
 
   return (
     <button

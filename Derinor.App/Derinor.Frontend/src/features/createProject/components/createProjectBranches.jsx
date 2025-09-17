@@ -1,27 +1,52 @@
-import React from "react";
-import { useBranches } from "../hooks/useBranches";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { useOutletContext } from "react-router-dom";
-import { useState } from "react";
+import api from "../../../app/axiosInstance";
+import { useCreateProjectStore } from "../store/createProjectStore";
+import BackToRepositories from "./backToRepositoriesButton";
 
 export default function CreateProjectBranches() {
   const navigate = useNavigate();
-  const { selectedRepository, sendProject, updateBranchStatuses } =
-    useOutletContext();
-  const branches = useBranches(selectedRepository?.repoName);
-  const [selectedBranchName, setSelectedBranchName] = useState("");
+  const projectRepository = useCreateProjectStore(
+    (state) => state.projectData.projectBranches.projectRepository
+  );
+  const productionBranch = useCreateProjectStore(
+    (state) => state.projectData.projectBranches.projectProductionBranch
+  );
+  const selectBranch = useCreateProjectStore((state) => state.selectBranch);
+  const createProject = useCreateProjectStore((state) => state.createProject);
+
+  const [branches, setBranches] = useState([]);
 
   useEffect(() => {
-    if (!selectedRepository) {
-      navigate("../repositories");
+    if (!projectRepository) {
+      navigate("/projects/create-project/repositories");
+      return;
     }
-  }, [selectedRepository, navigate]);
 
-  const handleSelect = (e) => {
-    const name = e.target.value;
-    setSelectedBranchName(name);
-    updateBranchStatuses({ branchName: name });
+    const fetchBranches = async () => {
+      try {
+        const response = await api.get("projects/fetch-branches", {
+          params: { repositoryName: projectRepository },
+        });
+        setBranches(response.data);
+      } catch (error) {
+        console.error("Failed to fetch branches:", error);
+      }
+    };
+
+    fetchBranches();
+  }, [projectRepository, navigate]);
+
+  const handleBranchClick = (branch) => (e) => {
+    e.preventDefault();
+    selectBranch(branch);
+  };
+
+  const handleFinish = async () => {
+    const success = await createProject();
+    if (success) {
+      navigate("/projects", { replace: true });
+    }
   };
 
   return (
@@ -29,44 +54,35 @@ export default function CreateProjectBranches() {
       <h2 className="text-[#23272A] font-bold text-[2rem]">
         Select production branch
       </h2>
-      <div>
+      <div className="flex flex-col gap-[2rem]">
         <div className="flex flex-col gap-[1rem]">
-          <div className="flex flex-col gap-[0.5rem]">
-            <div className="flex flex-col gap-[1rem] h-[20rem] overflow-hidden">
-              {branches.length > 0 ? (
-                <div className="flex flex-col gap-[1rem]">
-                  {branches.map((branch) => (
-                    <label
-                      key={branch.branchName}
-                      className="cursor-pointer flex items-center bg-[#3D6BC6] h-[2.5rem] pl-[1.125rem] pr-[1.125rem] rounded-[0.5rem] text-[#F8FAFC]"
-                    >
-                      <input
-                        type="radio"
-                        name="productionBranch"
-                        value={branch.branchName}
-                        checked={selectedBranchName === branch.branchName}
-                        onChange={handleSelect}
-                        className="form-radio appearance-none"
-                      />
-                      <span className="font-[1rem] text-[#F8FAFC]">
-                        {branch.branchName}
-                      </span>
-                    </label>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-gray-500">No branches available</p>
-              )}
-            </div>
-          </div>
-          <div className="flex flex-col gap-[2rem] items-start">
-            <button
-              onClick={sendProject}
-              className="bg-[#3D6BC6] text-white h-[2.5rem] px-[1.5rem] rounded-[0.5rem] cursor-pointer font-regular inline-block"
-            >
-              Finish
-            </button>
-          </div>
+          {branches.length > 0 ? (
+            branches.map((branch) => (
+              <div
+                key={branch.name}
+                onClick={handleBranchClick(branch)}
+                className={`cursor-pointer h-[2.5rem] pl-[1.125rem] pr-[1.125rem] rounded-[0.5rem] flex items-center w-auto text-[#F8FAFC] ${
+                  productionBranch === branch.name
+                    ? "bg-[#D570CC]"
+                    : "bg-[#3D6BC6]"
+                }`}
+              >
+                <label className="cursor-pointer">{branch.name}</label>
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-500">Loading branches...</p>
+          )}
+        </div>
+        <div className="flex gap-[1rem]">
+          <BackToRepositories />
+          <button
+            onClick={handleFinish}
+            disabled={!productionBranch}
+            className="bg-[#3D6BC6] h-[2.5rem] w-[11.125rem] text-[0.875rem] text-[#F8FAFC] font-semibold cursor-pointer rounded-[0.4rem] disabled:bg-gray-400"
+          >
+            Finish
+          </button>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import React from "react";
 import Logo from "../../../assets/images/DerinorLogo.svg";
 import SettingsButton from "../../../components/SettingsButton";
+import LogoutButton from "./LogOutButton";
 
 function ProjectSectionNavigation() {
   return (
@@ -28,7 +29,10 @@ function ProjectSectionNavigation() {
             </ul>
           </div>
         </div>
-        <SettingsButton />
+        <div className="flex items-center gap-[1rem]">
+          <SettingsButton />
+          <LogoutButton />
+        </div>
       </div>
     </div>
   );

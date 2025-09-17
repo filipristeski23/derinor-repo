@@ -1,8 +1,8 @@
-import ReportsPage from "../pages/reportsPage";
+import ReportsPage from "../pages/ReportsPage";
 
 export const reportsPageRoutes = [
   {
-    path: "page-reports",
+    path: "/reports/:projectID",
     element: <ReportsPage />,
   },
 ];

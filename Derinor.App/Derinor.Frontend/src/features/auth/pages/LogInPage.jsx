@@ -1,15 +1,26 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import GitHubLogo from "../../../assets/images/github-mark-white.svg";
 import DerinorLogo from "../../../assets/images/DerinorLogo.svg";
 import WelcomeBackBackground from "../../../assets/images/background.svg";
 
+const api = `https://localhost:7113/`;
+
 export default function LoginPage() {
+  const location = useLocation();
+
+  const handleGitHubLogin = () => {
+    window.location.href = `${api}auth/github-signin`;
+  };
+
+  const urlParams = new URLSearchParams(location.search);
+  const error = urlParams.get("error");
+
   return (
     <div className="w-full h-screen flex">
-      <div className=" w-[50%] bg-[#F8FAFD] flex flex-col items-center justify-center text-center">
+      <div className="w-[50%] bg-[#F8FAFD] flex flex-col items-center justify-center text-center">
         <div className="w-[38.75rem] flex flex-col align-middle justify-center items-center">
-          <img src={DerinorLogo} alt="Derinor Logo" className="w-[7.875rem] " />
+          <img src={DerinorLogo} alt="Derinor Logo" className="w-[7.875rem]" />
           <h2 className="text-[1.875rem] text-[#23272A] font-bold mt-[0.5rem]">
             Connect & Sign In
           </h2>
@@ -17,12 +28,23 @@ export default function LoginPage() {
             By connecting your account you sign in with us and connect your
             account at the same time
           </h4>
-          <Link to="/projects">
-            <button className="bg-black text-white flex w-[25rem] h-[2.5rem] items-center justify-center gap-[1rem] rounded-[0.5rem] cursor-pointer mt-[4rem] text-[1rem] font-medium">
-              Continue with GitHub{" "}
-              <img src={GitHubLogo} className="w-[1.5rem] bg-black" />
-            </button>
-          </Link>
+
+          {error && (
+            <div className="mt-[2rem] p-[1rem] bg-red-100 border border-red-300 rounded-[0.5rem] text-red-700">
+              {error === "no_token" &&
+                "Authentication failed: No token received from server."}
+              {error === "auth_failed" &&
+                "Authentication failed: Could not process user data."}
+            </div>
+          )}
+
+          <button
+            onClick={handleGitHubLogin}
+            className="bg-black text-white flex w-[25rem] h-[2.5rem] items-center justify-center gap-[1rem] rounded-[0.5rem] cursor-pointer mt-[4rem] text-[1rem] font-medium hover:bg-gray-800 transition-colors"
+          >
+            Continue with GitHub
+            <img src={GitHubLogo} className="w-[1.5rem] bg-black" />
+          </button>
         </div>
       </div>
       <div

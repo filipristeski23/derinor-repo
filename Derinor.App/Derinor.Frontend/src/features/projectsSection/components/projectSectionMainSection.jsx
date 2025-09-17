@@ -1,14 +1,28 @@
 import SearchIcon from "../../../assets/icons/SearchIcon.svg";
 import PageArrowButton from "../../../assets/icons/PageArrowButton.svg";
 import { Link } from "react-router-dom";
-import { useSearchProjects } from "../hooks/useSearchProjects";
-import { UseSendGeminiData } from "../../generateReport/hooks/useSendGeminiData";
-import { useGenerateReportStore } from "../../generateReport/store/useGenerateReportStore";
+import { useState, useEffect } from "react";
+import api from "../../../app/axiosInstance";
 
 function ProjectSectionMainSection() {
-  const { searchProjectData, setSearchProjectData, projectData } =
-    useSearchProjects();
-  const setProjectID = useGenerateReportStore((s) => s.setProjectID);
+  const [searchProjectData, setSearchProjectData] = useState("");
+  const [projectData, setProjectData] = useState([]);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await api.get("projects/all-projects", {
+          params: searchProjectData ? { search: searchProjectData } : {},
+        });
+        setProjectData(response.data);
+      } catch (error) {
+        console.error("Failed to fetch projects:", error);
+        setProjectData([]);
+      }
+    };
+
+    fetchProjects();
+  }, [searchProjectData]);
 
   return (
     <div className="max-w-full pt-[2rem] pb-[2rem] bg-[#F8FAFD]">
@@ -65,18 +79,17 @@ function ProjectSectionMainSection() {
                   </div>
                   <div className="flex gap-[1rem] pl-[1rem] pr-[1rem] mt-auto">
                     <Link
-                      to="/projects/generate-report"
+                      to={`/projects/${project.projectID}/generate-report`}
                       className="flex align-middle justify-center h-[2.5rem]"
                     >
-                      <button
-                        className="bg-[#3D6BC6] pl-[2rem] pr-[2rem] text-[0.875rem] text-[#F8FAFC] font-semibold cursor-pointer rounded-[0.4rem] leading-[1.75rem]"
-                        onClick={() => setProjectID(project.projectID)}
-                      >
+                      <button className="bg-[#3D6BC6] pl-[2rem] pr-[2rem] text-[0.875rem] text-[#F8FAFC] font-semibold cursor-pointer rounded-[0.4rem] leading-[1.75rem]">
                         New Report
                       </button>
                     </Link>
                     <Link
-                      to="/register"
+                      to={`/reports/${project.projectID}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex align-middle justify-center h-[2.5rem]"
                     >
                       <button className="bg-[#3D6BC6] pl-[2rem] pr-[2rem] text-[0.875rem] text-[#F8FAFC] font-semibold cursor-pointer rounded-[0.4rem] leading-[1.75rem]">

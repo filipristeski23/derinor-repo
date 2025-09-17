@@ -1,11 +1,21 @@
-import { Outlet } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import CloseMenuButton from "../../../assets/icons/CloseMenuButton.svg";
-import useCloseSideMenu from "../hooks/useCloseSideMenu";
-import { useSendProjectDetails } from "../hooks/useSendProjectDetails";
+import { useCreateProjectStore } from "../store/createProjectStore";
 
 export default function CreateProjectSideMenu() {
-  const { closeMenu } = useCloseSideMenu();
-  const sendDetails = useSendProjectDetails();
+  const navigate = useNavigate();
+  const reset = useCreateProjectStore((state) => state.reset);
+
+  useEffect(() => {
+    return () => {
+      reset();
+    };
+  }, [reset]);
+
+  const closeMenu = () => {
+    navigate("/projects");
+  };
 
   return (
     <div className="fixed top-0 right-0 h-screen w-full max-w-[39.75rem] pl-[4rem] pr-[4rem] pt-[2rem] bg-[#F8FAFD] shadow-[0_4px_8px_rgba(0,0,0,0.1)] overflow-y-auto">
@@ -20,7 +30,7 @@ export default function CreateProjectSideMenu() {
             className="w-[1.5rem]"
           />
         </button>
-        <Outlet context={sendDetails} />
+        <Outlet />
       </div>
     </div>
   );

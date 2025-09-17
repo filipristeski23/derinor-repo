@@ -1,12 +1,31 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useOutletContext } from "react-router-dom";
-import { useRepositories } from "../../createProject/hooks/useRepositories";
+import api from "../../../app/axiosInstance";
+import { useCreateProjectStore } from "../store/createProjectStore";
 
 export default function CreateProjectRepositories() {
-  const { selectRepository } = useOutletContext();
-  const { repositories } = useRepositories();
+  const selectRepository = useCreateProjectStore(
+    (state) => state.selectRepository
+  );
+  const [repositories, setRepositories] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchRepositories = async () => {
+      try {
+        const response = await api.get("projects/fetch-repositories");
+        const formattedRepoData = response.data.map((repo) => ({
+          repoID: repo.id,
+          repoName: repo.name,
+        }));
+        setRepositories(formattedRepoData);
+      } catch (error) {
+        console.error("Failed to fetch repositories", error);
+      }
+    };
+
+    fetchRepositories();
+  }, []);
 
   const handleRepoClick = (repo) => (e) => {
     e.preventDefault();
@@ -26,7 +45,7 @@ export default function CreateProjectRepositories() {
               <div
                 key={repo.repoID}
                 onClick={handleRepoClick(repo)}
-                className="cursor-pointer bg-[#3D6BC6] h-[2.5rem] pl-[1.125rem] pr-[1.125rem] rounded-[0.5rem] flex items-center inline-flex justify-between w-auto text-[#F8FAFC]"
+                className="cursor-pointer bg-[#3D6BC6] h-[2.5rem] pl-[1.125rem] pr-[1.125rem] rounded-[0.5rem] flex items-center justify-between w-auto text-[#F8FAFC]"
               >
                 <label className="cursor-pointer">{repo.repoName}</label>
                 <span className="text-lg">→</span>
