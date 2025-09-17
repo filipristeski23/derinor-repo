@@ -25,12 +25,12 @@ function ReportsPage() {
   }, [projectID]);
 
   return (
-    <>
-      <div className="w-full flex flex-col gap-[0.5rem] pt-[2rem] pb-[2rem]">
-        <h2 className="text-[#23272A] text-[2rem] font-bold flex justify-center">
+    <div className="px-[1rem] md:px-[2rem]">
+      <div className="w-full flex flex-col gap-[0.5rem] pt-[2rem] pb-[2rem] text-center">
+        <h2 className="text-[#23272A] text-[1.75rem] md:text-[2rem] font-bold">
           Project Reports
         </h2>
-        <h4 className="flex justify-center text-[1rem] font-medium">
+        <h4 className="text-[1rem] font-medium">
           latest news and reports can be found here
         </h4>
       </div>
@@ -46,7 +46,7 @@ function ReportsPage() {
           <p>No reports found for this project.</p>
         )}
       </section>
-    </>
+    </div>
   );
 }
 

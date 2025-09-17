@@ -4,39 +4,39 @@ export default function Footer() {
   return (
     <div
       id="contact"
-      className="w-full h-[22.5rem] bg-[#3D6BC6] flex items-center justify-center"
+      className="w-full h-auto md:h-[22.5rem] bg-[#3D6BC6] flex items-center justify-center py-[3rem] md:py-0"
     >
-      <div className="w-full max-w-[62.5rem] flex justify-between bg-[#3D6BC6]">
+      <div className="w-full max-w-[62.5rem] flex flex-col md:flex-row justify-center md:justify-between items-center text-center md:text-left gap-[3rem] md:gap-0 px-[1rem]">
         <div>
-          <ul className="flex flex-col gap-[1rem] w-fit bg-[#3D6BC6]">
-            <li className="bg-[#3D6BC6]">
+          <ul className="flex flex-col gap-[1rem] w-fit">
+            <li>
               <a
-                href=""
-                className="block w-fit text-[1rem] font-semibold bg-[#3D6BC6] text-[#F8FAFD]"
+                href="#home"
+                className="block w-fit text-[1rem] font-semibold text-[#F8FAFD]"
               >
                 Home
               </a>
             </li>
-            <li className="bg-[#3D6BC6]">
+            <li>
               <a
-                href=""
-                className="block w-fit text-[1rem] font-semibold bg-[#3D6BC6] text-[#F8FAFD]"
+                href="#features"
+                className="block w-fit text-[1rem] font-semibold text-[#F8FAFD]"
               >
                 Features
               </a>
             </li>
-            <li className="bg-[#3D6BC6]">
+            <li>
               <a
-                href=""
-                className="block w-fit text-[1rem] font-semibold bg-[#3D6BC6] text-[#F8FAFD]"
+                href="#pricing"
+                className="block w-fit text-[1rem] font-semibold text-[#F8FAFD]"
               >
                 Pricing
               </a>
             </li>
-            <li className="bg-[#3D6BC6]">
+            <li>
               <a
-                href=""
-                className="block w-fit text-[1rem] font-semibold bg-[#3D6BC6] text-[#F8FAFD]"
+                href="#request-a-feature"
+                className="block w-fit text-[1rem] font-semibold text-[#F8FAFD]"
               >
                 Request a feature
               </a>
@@ -44,20 +44,20 @@ export default function Footer() {
           </ul>
         </div>
 
-        <div className="bg-[#3D6BC6]">
-          <ul className="flex flex-col gap-[1rem] w-fit bg-[#3D6BC6]">
-            <li className="bg-[#3D6BC6]">
+        <div>
+          <ul className="flex flex-col gap-[1rem] w-fit">
+            <li>
               <a
-                href=""
-                className="block w-fit text-[1rem] font-semibold bg-[#3D6BC6] text-[#F8FAFD]"
+                href="#"
+                className="block w-fit text-[1rem] font-semibold text-[#F8FAFD]"
               >
                 Terms Of Service
               </a>
             </li>
-            <li className="bg-[#3D6BC6]">
+            <li>
               <a
-                href=""
-                className="block w-fit text-[1rem] font-semibold bg-[#3D6BC6] text-[#F8FAFD]"
+                href="#"
+                className="block w-fit text-[1rem] font-semibold text-[#F8FAFD]"
               >
                 Privacy Policy
               </a>
@@ -65,30 +65,30 @@ export default function Footer() {
           </ul>
         </div>
 
-        <div className="bg-[#3D6BC6]">
-          <ul className="flex flex-col gap-[1rem] w-fit bg-[#3D6BC6]">
+        <div>
+          <ul className="flex flex-col gap-[1rem] w-fit">
             <li>
               <a
-                href=""
-                className="block w-fit text-[1rem] font-semibold bg-[#3D6BC6] text-[#F8FAFD]"
+                href="mailto:hello@email.com"
+                className="block w-fit text-[1rem] font-semibold text-[#F8FAFD]"
               >
                 hello@email.com
               </a>
             </li>
-            <li className="bg-[#3D6BC6]">
+            <li>
               <a
-                href=""
-                className="block w-fit text-[1rem] font-semibold bg-[#3D6BC6] text-[#F8FAFD]"
+                href="#"
+                className="block w-fit text-[1rem] font-semibold text-[#F8FAFD]"
               >
-                instagram
+                Instagram
               </a>
             </li>
-            <li className="bg-[#3D6BC6]">
+            <li>
               <a
-                href=""
-                className="block w-fit text-[1rem] font-semibold bg-[#3D6BC6] text-[#F8FAFD]"
+                href="#"
+                className="block w-fit text-[1rem] font-semibold text-[#F8FAFD]"
               >
-                facebook
+                Facebook
               </a>
             </li>
           </ul>

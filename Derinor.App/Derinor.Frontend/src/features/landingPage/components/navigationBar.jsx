@@ -1,10 +1,10 @@
 import React from "react";
 import Logo from "../../../assets/images/DerinorLogo.svg";
-import LogInButton from "../../../components/logInButton";
+import LogInButton from "../../../components/LogInButton";
 
 export default function NavigationBar() {
   return (
-    <div id="home" className="max-w-full">
+    <div id="home" className="max-w-full px-[1rem] md:px-0">
       <div className="max-w-[82.5rem] h-[5.5rem] mx-auto my-0 flex justify-between items-center">
         <a
           href="#home"
@@ -12,7 +12,7 @@ export default function NavigationBar() {
         >
           <img src={Logo} alt="logo" className="w-[8.875rem] h-[2.5rem]" />
         </a>
-        <div className="flex align-middle justify-center">
+        <div className="hidden md:flex align-middle justify-center">
           <ul className="flex justify-around gap-[1.5rem]">
             <li className="flex items-center justify-center">
               <a href="#home" className="font-semibold">

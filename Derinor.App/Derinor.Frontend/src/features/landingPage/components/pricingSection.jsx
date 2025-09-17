@@ -1,30 +1,31 @@
 import React from "react";
-import CheckMark from "../../../assets/icons/checkMark.svg";
-import GetStartedButtonPricing from "../../../components/getStartedButtonPricing.jsx";
+import CheckMark from "../../../assets/icons/CheckMark.svg";
+import GetStartedButtonPricing from "../../../components/GetStartedButtonPricing.jsx";
 
 export default function PricingSection() {
   return (
-    <div id="pricing" className="w-full mt-[10rem] mb-[15rem]">
+    <div
+      id="pricing"
+      className="w-full mt-[6rem] md:mt-[10rem] mb-[6rem] md:mb-[15rem] px-[1rem]"
+    >
       <div className="max-w-[62.5rem] mx-auto my-0 flex flex-col items-center">
         <div className="flex flex-col gap-[1rem]">
-          <h2 className="text-[2.5rem] font-semibold w-full max-w-[40.625rem] text-center">
+          <h2 className="text-[2rem] md:text-[2.5rem] font-semibold w-full max-w-[40.625rem] text-center">
             Pricing
           </h2>
-          <h3 className="text-[1.25rem] font-medium text-center w-full max-w-[40.625rem]">
+          <h3 className="text-[1rem] md:text-[1.25rem] font-medium text-center w-full max-w-[40.625rem]">
             Currently we are under beta and everyone can use the app for free,
             when beta expired pricing down applies
           </h3>
         </div>
-        <div className=" w-full flex gap-[2.5rem] justify-center mt-[3.5rem]">
+        <div className="w-full flex flex-col lg:flex-row items-center lg:items-stretch gap-[2.5rem] justify-center mt-[3.5rem]">
           <div className="w-full max-w-[20.625rem]">
-            <div className="max-w-[20.625rem] rounded-[1rem] shadow-[0_4px_8px_rgba(0,0,0,0.1)]">
-              <div className="bg-[#3D6BC6] flex-col gap-[0.5rem] rounded-tl-[1rem] rounded-tr-[1rem]  pt-[2rem] pb-[2rem] pl-[1.5rem]">
-                <h5 className="text-[1.25rem] font-medium bg-[#3D6BC6] text-[#F8FAFD]">
+            <div className="w-full rounded-[1rem] shadow-[0_4px_8px_rgba(0,0,0,0.1)]">
+              <div className="bg-[#3D6BC6] flex flex-col gap-[0.5rem] rounded-tl-[1rem] rounded-tr-[1rem] pt-[2rem] pb-[2rem] pl-[1.5rem]">
+                <h5 className="text-[1.25rem] font-medium text-[#F8FAFD]">
                   Starter Plan
                 </h5>
-                <h4 className="text-[2.5rem] font-bold bg-[#3D6BC6] text-[#F8FAFD]">
-                  10$
-                </h4>
+                <h4 className="text-[2.5rem] font-bold text-[#F8FAFD]">10$</h4>
               </div>
               <div className="flex flex-col gap-[1.5rem] pt-[2rem] pb-[2rem] pl-[1.5rem] pr-[1.5rem] rounded-bl-[1rem] rounded-br-[1rem] bg-[#f8fafd]">
                 <div className="flex gap-[0.5rem]">
@@ -37,7 +38,7 @@ export default function PricingSection() {
                     25 Reports Per Day Total
                   </h5>
                 </div>
-                <div className="flex gap-[0.5rem] align-middle">
+                <div className="flex gap-[0.5rem] items-center">
                   <img src={CheckMark} alt="check mark" />
                   <h5 className="text-[0.875rem] font-medium">
                     Publish Page Per Project
@@ -48,27 +49,25 @@ export default function PricingSection() {
             </div>
           </div>
           <div className="w-full max-w-[20.625rem]">
-            <div className="max-w-[20.625rem] rounded-[1rem] shadow-[0_4px_8px_rgba(0,0,0,0.1)]">
-              <div className="bg-[#3D6BC6] flex-col gap-[0.5rem] rounded-tl-[1rem] rounded-tr-[1rem]  pt-[2rem] pb-[2rem] pl-[1.5rem]">
-                <h5 className="text-[1.25rem] font-medium bg-[#3D6BC6] text-[#F8FAFD]">
-                  Starter Plan
+            <div className="w-full rounded-[1rem] shadow-[0_4px_8px_rgba(0,0,0,0.1)]">
+              <div className="bg-[#3D6BC6] flex flex-col gap-[0.5rem] rounded-tl-[1rem] rounded-tr-[1rem] pt-[2rem] pb-[2rem] pl-[1.5rem]">
+                <h5 className="text-[1.25rem] font-medium text-[#F8FAFD]">
+                  Business Plan
                 </h5>
-                <h4 className="text-[2.5rem] font-bold bg-[#3D6BC6] text-[#F8FAFD]">
-                  10$
-                </h4>
+                <h4 className="text-[2.5rem] font-bold text-[#F8FAFD]">25$</h4>
               </div>
-              <div className="flex flex-col gap-[1.5rem] pt-[2rem] pb-[2rem]  pl-[1.5rem] pr-[1.5rem] rounded-bl-[1rem] rounded-br-[1rem] bg-[#f8fafd]">
+              <div className="flex flex-col gap-[1.5rem] pt-[2rem] pb-[2rem] pl-[1.5rem] pr-[1.5rem] rounded-bl-[1rem] rounded-br-[1rem] bg-[#f8fafd]">
                 <div className="flex gap-[0.5rem]">
                   <img src={CheckMark} alt="check mark" />
-                  <h5 className="text-[0.875rem] font-medium">5 Projects</h5>
+                  <h5 className="text-[0.875rem] font-medium">25 Projects</h5>
                 </div>
                 <div className="flex gap-[0.5rem]">
                   <img src={CheckMark} alt="check mark" />
                   <h5 className="text-[0.875rem] font-medium ">
-                    25 Reports Per Day Total
+                    100 Reports Per Day Total
                   </h5>
                 </div>
-                <div className="flex gap-[0.5rem] align-middle">
+                <div className="flex gap-[0.5rem] items-center">
                   <img src={CheckMark} alt="check mark" />
                   <h5 className="text-[0.875rem] font-medium">
                     Publish Page Per Project
@@ -79,27 +78,29 @@ export default function PricingSection() {
             </div>
           </div>
           <div className="w-full max-w-[20.625rem]">
-            <div className="max-w-[20.625rem] rounded-[1rem] shadow-[0_4px_8px_rgba(0,0,0,0.1)]">
-              <div className="bg-[#3D6BC6] flex-col gap-[0.5rem] rounded-tl-[1rem] rounded-tr-[1rem]  pt-[2rem] pb-[2rem] pl-[1.5rem]">
-                <h5 className="text-[1.25rem] font-medium bg-[#3D6BC6] text-[#F8FAFD]">
-                  Starter Plan
+            <div className="w-full rounded-[1rem] shadow-[0_4px_8px_rgba(0,0,0,0.1)]">
+              <div className="bg-[#3D6BC6] flex flex-col gap-[0.5rem] rounded-tl-[1rem] rounded-tr-[1rem] pt-[2rem] pb-[2rem] pl-[1.5rem]">
+                <h5 className="text-[1.25rem] font-medium text-[#F8FAFD]">
+                  Enterprise Plan
                 </h5>
-                <h4 className="text-[2.5rem] font-bold bg-[#3D6BC6] text-[#F8FAFD]">
-                  10$
+                <h4 className="text-[2.5rem] font-bold text-[#F8FAFD]">
+                  Contact Us
                 </h4>
               </div>
-              <div className="flex flex-col gap-[1.5rem] pt-[2rem] pb-[2rem]  pl-[1.5rem] pr-[1.5rem] rounded-bl-[1rem] rounded-br-[1rem] bg-[#f8fafd]">
+              <div className="flex flex-col gap-[1.5rem] pt-[2rem] pb-[2rem] pl-[1.5rem] pr-[1.5rem] rounded-bl-[1rem] rounded-br-[1rem] bg-[#f8fafd]">
                 <div className="flex gap-[0.5rem]">
                   <img src={CheckMark} alt="check mark" />
-                  <h5 className="text-[0.875rem] font-medium">5 Projects</h5>
+                  <h5 className="text-[0.875rem] font-medium">
+                    Unlimited Projects
+                  </h5>
                 </div>
                 <div className="flex gap-[0.5rem]">
                   <img src={CheckMark} alt="check mark" />
                   <h5 className="text-[0.875rem] font-medium ">
-                    25 Reports Per Day Total
+                    Unlimited Reports
                   </h5>
                 </div>
-                <div className="flex gap-[0.5rem] align-middle">
+                <div className="flex gap-[0.5rem] items-center">
                   <img src={CheckMark} alt="check mark" />
                   <h5 className="text-[0.875rem] font-medium">
                     Publish Page Per Project

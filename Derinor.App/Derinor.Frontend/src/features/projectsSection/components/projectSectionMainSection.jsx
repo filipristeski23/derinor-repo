@@ -1,12 +1,13 @@
+import React, { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
+import api from "../../../app/axiosInstance";
 import SearchIcon from "../../../assets/icons/SearchIcon.svg";
 import PageArrowButton from "../../../assets/icons/PageArrowButton.svg";
-import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
-import api from "../../../app/axiosInstance";
 
 function ProjectSectionMainSection() {
   const [searchProjectData, setSearchProjectData] = useState("");
   const [projectData, setProjectData] = useState([]);
+  const scrollContainerRef = useRef(null);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -16,7 +17,6 @@ function ProjectSectionMainSection() {
         });
         setProjectData(response.data);
       } catch (error) {
-        console.error("Failed to fetch projects:", error);
         setProjectData([]);
       }
     };
@@ -24,11 +24,17 @@ function ProjectSectionMainSection() {
     fetchProjects();
   }, [searchProjectData]);
 
+  const handleScroll = (direction) => {
+    const container = scrollContainerRef.current;
+    const scrollAmount = container.clientWidth * direction;
+    container.scrollBy({ left: scrollAmount, behavior: "smooth" });
+  };
+
   return (
-    <div className="max-w-full pt-[2rem] pb-[2rem] bg-[#F8FAFD]">
-      <div className="max-w-[78.5rem] h-max h-[25.063rem] max-h-screen mx-auto my-0 flex flex-col gap-[2rem]">
-        <div className="w-full flex justify-between">
-          <div className="relative w-full max-w-[37.5rem]">
+    <div className="w-full pt-[2rem] pb-[2rem] bg-[#F8FAFD] px-[1rem] sm:px-[2rem]">
+      <div className="max-w-[78.5rem] mx-auto my-0 flex flex-col gap-[2rem]">
+        <div className="w-full flex flex-col md:flex-row gap-[1rem] md:justify-between">
+          <div className="relative w-full md:max-w-[37.5rem]">
             <input
               type="text"
               placeholder="Search for your project.."
@@ -44,85 +50,81 @@ function ProjectSectionMainSection() {
           </div>
           <Link
             to="create-project"
-            className="bg-[#3D6BC6] pl-[2rem] pr-[2rem] flex justify-center text-[0.875rem] text-[#F8FAFC] font-semibold cursor-pointer rounded-[0.4rem]"
+            className="bg-[#3D6BC6] h-[2.5rem] px-[2rem] flex justify-center items-center text-[0.875rem] text-[#F8FAFC] font-semibold cursor-pointer rounded-[0.4rem] flex-shrink-0"
           >
             <button className="cursor-pointer">New Project</button>
           </Link>
         </div>
 
         <div
-          className="w-full flex gap-[1rem] h-[25.063rem] overflow-x-auto overflow-y-hidden scrollbar-hide scroll-smooth [&::-webkit-scrollbar]:hidden [scrollbar-width:none]"
-          id="project-scroll-container"
+          ref={scrollContainerRef}
+          className="flex overflow-x-auto snap-x snap-mandatory scroll-smooth -mx-[0.75rem] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
         >
           {projectData && projectData.length > 0 ? (
             projectData.map((project) => (
               <div
                 key={project.projectID}
-                className="flex flex-col w-full max-w-[18.875rem] h-[24.063rem] rounded-[1rem] shadow-[0_4px_8px_rgba(0,0,0,0.1)] flex-shrink-0"
+                className="flex-shrink-0 snap-start w-full md:w-1/2 lg:w-1/4 p-[0.75rem]"
               >
-                <div className="bg-[#3D6BC6] w-full h-[9.5rem] rounded-tr-[1rem] rounded-tl-[1rem] rounded-bl-[0rem] rounded-br-[0rem] pt-[1rem] pl-[1rem] pr-[1rem] pb-[1rem] flex flex-col gap-[0.5rem]">
-                  <div className="bg-[#D570CC] w-fit inline-block pt-[0.125rem] pb-[0.125rem] pl-[0.75rem] pr-[0.75rem] rounded-[50rem] text-[#F8FAFD] font-semibold">
-                    {project.projectOwner}
+                <div className="flex flex-col w-full h-[24.063rem] rounded-[1rem] shadow-[0_4px_8px_rgba(0,0,0,0.1)] bg-white">
+                  <div className="bg-[#3D6BC6] w-full h-[9.5rem] rounded-t-[1rem] pt-[1rem] px-[1rem] pb-[1rem] flex flex-col gap-[0.5rem]">
+                    <div className="bg-[#D570CC] w-fit inline-block pt-[0.125rem] pb-[0.125rem] px-[0.75rem] rounded-[50rem] text-[#F8FAFD] font-semibold text-[0.875rem]">
+                      {project.projectOwner}
+                    </div>
+                    <h2 className="text-[#F8FAFD] text-[1.75rem] font-bold h-[5rem] overflow-hidden leading-[2.5rem]">
+                      {project.projectName}
+                    </h2>
                   </div>
-                  <h2 className="text-[#F8FAFD] text-[1.75rem] font-bold h-[5rem] overflow-hidden leading-[2.5rem]">
-                    {project.projectName}
-                  </h2>
-                </div>
-                <div className="flex flex-col justify-between h-full pb-[1rem]">
-                  <div className="flex flex-col gap-[0.5rem] pl-[1rem] pt-[1rem] pr-[1rem]">
-                    <p className="text-[#23272A] font-medium text-[0.875rem] w-full max-w-[16.875rem] h-[7rem]  max-h-[10rem] leading-[1.75rem]">
-                      {project.projectDescription}
-                    </p>
-                    <h4 className="font-bold text-[#23272A] text-[0.875rem]">
-                      {project.reports} Reports
-                    </h4>
-                  </div>
-                  <div className="flex gap-[1rem] pl-[1rem] pr-[1rem] mt-auto">
-                    <Link
-                      to={`/projects/${project.projectID}/generate-report`}
-                      className="flex align-middle justify-center h-[2.5rem]"
-                    >
-                      <button className="bg-[#3D6BC6] pl-[2rem] pr-[2rem] text-[0.875rem] text-[#F8FAFC] font-semibold cursor-pointer rounded-[0.4rem] leading-[1.75rem]">
-                        New Report
-                      </button>
-                    </Link>
-                    <Link
-                      to={`/reports/${project.projectID}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex align-middle justify-center h-[2.5rem]"
-                    >
-                      <button className="bg-[#3D6BC6] pl-[2rem] pr-[2rem] text-[0.875rem] text-[#F8FAFC] font-semibold cursor-pointer rounded-[0.4rem] leading-[1.75rem]">
-                        Open
-                      </button>
-                    </Link>
+                  <div className="flex flex-col justify-between h-full pb-[1rem]">
+                    <div className="flex flex-col gap-[0.5rem] px-[1rem] pt-[1rem]">
+                      <p className="text-[#23272A] font-medium text-[0.875rem] w-full h-[7rem] leading-[1.75rem]">
+                        {project.projectDescription}
+                      </p>
+                      <h4 className="font-bold text-[#23272A] text-[0.875rem]">
+                        {project.reports} Reports
+                      </h4>
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-[1rem] px-[1rem] mt-auto">
+                      <Link
+                        to={`/projects/${project.projectID}/generate-report`}
+                        className="flex items-center justify-center h-[2.5rem] w-full"
+                      >
+                        <button className="bg-[#3D6BC6] w-full h-full text-[0.875rem] text-[#F8FAFC] font-semibold cursor-pointer rounded-[0.4rem] leading-[1.75rem]">
+                          New Report
+                        </button>
+                      </Link>
+                      <Link
+                        to={`/reports/${project.projectID}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center h-[2.5rem] w-full"
+                      >
+                        <button className="bg-[#3D6BC6] w-full h-full text-[0.875rem] text-[#F8FAFC] font-semibold cursor-pointer rounded-[0.4rem] leading-[1.75rem]">
+                          Open
+                        </button>
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>
             ))
           ) : (
-            <p>No projects found</p>
+            <p className="w-full text-center py-[2rem]">No projects found</p>
           )}
         </div>
 
-        <div className="flex gap-[1.5rem]">
+        <div className="hidden md:flex gap-[1.5rem]">
           <button
-            className="h-[2.5rem] bg-[#3D6BC6] pl-[1.125rem] pr-[1.125rem] rounded-[0.5rem] cursor-pointer"
-            onClick={() => {
-              const el = document.getElementById("project-scroll-container");
-              el?.scrollBy({ left: -1272, behavior: "smooth" });
-            }}
+            className="h-[2.5rem] bg-[#3D6BC6] px-[1.125rem] rounded-[0.5rem] cursor-pointer"
+            onClick={() => handleScroll(-1)}
           >
-            <img src={PageArrowButton} alt="Arrow" />
+            <img src={PageArrowButton} alt="Previous Page" />
           </button>
           <button
-            className="h-[2.5rem] bg-[#3D6BC6] pl-[1.125rem] pr-[1.125rem] rounded-[0.5rem] cursor-pointer"
-            onClick={() => {
-              const el = document.getElementById("project-scroll-container");
-              el?.scrollBy({ left: 1272, behavior: "smooth" });
-            }}
+            className="h-[2.5rem] bg-[#3D6BC6] px-[1.125rem] rounded-[0.5rem] cursor-pointer"
+            onClick={() => handleScroll(1)}
           >
-            <img src={PageArrowButton} alt="Arrow" className="rotate-180" />
+            <img src={PageArrowButton} alt="Next Page" className="rotate-180" />
           </button>
         </div>
       </div>

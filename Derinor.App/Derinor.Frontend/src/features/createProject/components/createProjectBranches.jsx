@@ -50,11 +50,11 @@ export default function CreateProjectBranches() {
   };
 
   return (
-    <div className="flex flex-col gap-[2rem]">
-      <h2 className="text-[#23272A] font-bold text-[2rem]">
+    <div className="flex flex-col gap-[2rem] flex-grow min-h-0">
+      <h2 className="text-[#23272A] font-bold text-[1.75rem] sm:text-[2rem] flex-shrink-0">
         Select production branch
       </h2>
-      <div className="flex flex-col gap-[2rem]">
+      <div className="flex-grow min-h-0 overflow-y-auto">
         <div className="flex flex-col gap-[1rem]">
           {branches.length > 0 ? (
             branches.map((branch) => (
@@ -74,16 +74,16 @@ export default function CreateProjectBranches() {
             <p className="text-gray-500">Loading branches...</p>
           )}
         </div>
-        <div className="flex gap-[1rem]">
-          <BackToRepositories />
-          <button
-            onClick={handleFinish}
-            disabled={!productionBranch}
-            className="bg-[#3D6BC6] h-[2.5rem] w-[11.125rem] text-[0.875rem] text-[#F8FAFC] font-semibold cursor-pointer rounded-[0.4rem] disabled:bg-gray-400"
-          >
-            Finish
-          </button>
-        </div>
+      </div>
+      <div className="flex flex-col sm:flex-row gap-[1rem] flex-shrink-0 pt-[1rem]">
+        <BackToRepositories />
+        <button
+          onClick={handleFinish}
+          disabled={!productionBranch}
+          className="bg-[#3D6BC6] h-[2.5rem] w-full sm:w-[11.125rem] text-[0.875rem] text-[#F8FAFC] font-semibold cursor-pointer rounded-[0.4rem] disabled:bg-gray-400"
+        >
+          Finish
+        </button>
       </div>
     </div>
   );

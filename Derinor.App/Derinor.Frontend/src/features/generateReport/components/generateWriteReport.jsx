@@ -55,16 +55,18 @@ export default function GenerateWriteReport() {
   };
 
   return (
-    <div className="flex flex-col gap-[2rem]">
-      <div className="flex flex-row justify-between items-center">
-        <h2 className="text-[#23272A] font-bold text-[2rem]">New Report</h2>
+    <div className="flex flex-col gap-[2rem] flex-grow min-h-0">
+      <div className="flex-shrink-0 flex flex-col gap-[1rem] items-start sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="text-[#23272A] font-bold text-[1.75rem] sm:text-[2rem]">
+          New Report
+        </h2>
         <GenerateReportButton
           onClick={fetchGeminiData}
           disabled={isLoading || isPublishing || !startDate || !endDate}
         />
       </div>
 
-      <div className="flex flex-col gap-[0.5rem]">
+      <div className="flex-shrink-0 flex flex-col gap-[0.5rem]">
         <label className="text-[#23272A] font-semibold">
           Select Date Range
         </label>
@@ -80,19 +82,22 @@ export default function GenerateWriteReport() {
         />
       </div>
 
-      <div>
+      <div className="flex flex-col flex-grow min-h-0">
         <div
           ref={editableRef}
           onInput={handleInput}
           contentEditable={!isLoading}
           suppressContentEditableWarning={true}
-          className="w-full bg-[#EEF2F6] text-[#23272A] outline-none p-[1rem] rounded-[0.375rem] min-h-[23rem] resize-none"
+          className="w-full h-full bg-[#EEF2F6] text-[#23272A] outline-none p-[1rem] rounded-[0.375rem] overflow-y-auto resize-none"
         ></div>
       </div>
-      <PublishReportButton
-        onClick={handlePublish}
-        disabled={isPublishing || isLoading || !geminiData}
-      />
+
+      <div className="flex-shrink-0">
+        <PublishReportButton
+          onClick={handlePublish}
+          disabled={isPublishing || isLoading || !geminiData}
+        />
+      </div>
     </div>
   );
 }
