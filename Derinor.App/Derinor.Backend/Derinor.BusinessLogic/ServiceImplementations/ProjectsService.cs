@@ -32,9 +32,9 @@ namespace Derinor.Application.ServiceImplementations
             _userRepository = userRepository;
         }
 
-        public async Task<List<ProjectHomeResponseDTO>> AllProjects(string? search)
+        public async Task<List<ProjectHomeResponseDTO>> AllProjects(string? search, int userID)
         {
-            var fetchedProjects = await _projectsRepository.AllProjects(search);
+            var fetchedProjects = await _projectsRepository.AllProjects(search, userID);
             return fetchedProjects.Select(p => new ProjectHomeResponseDTO
             {
                 projectOwner = p.ProjectOwner,
@@ -59,7 +59,6 @@ namespace Derinor.Application.ServiceImplementations
                 ProjectProductionBranch = projectDetails.projectBranches.projectProductionBranch,
                 ProjectRepository = projectDetails.projectBranches.projectRepository,
                 ProjectID = insertedProjectData.ProjectID,
-                StartingDate = DateTime.UtcNow
             });
         }
 
@@ -177,14 +176,12 @@ namespace Derinor.Application.ServiceImplementations
 
             if (commitDetails.AllCommitsData == null || !commitDetails.AllCommitsData.Any())
             {
-                return new GeminiDataResponseDTO { GeminiMessage = "" }; // Return empty if no commits
+                return new GeminiDataResponseDTO { GeminiMessage = "" };
             }
 
             var sb = new StringBuilder();
             var developmentPeriod = $"Development Period: {request.startDate:yyyy/MM/dd} – {request.endDate:yyyy/MM/dd}";
 
-            // ... The rest of your StringBuilder logic and Gemini API call ...
-            // This part of your code is correct.
             sb.AppendLine("You are an expert changelog reports writer for a startup.");
             sb.AppendLine($"The summary should include Finished Work and {developmentPeriod} at the top, then each notable change (commit message and its code differences) should include a title and description about what was changed that will be understandable to a non-technical person.");
             sb.AppendLine("Please read the following commits and code diffs, then give me a concise summary of notable changes.");
@@ -205,9 +202,24 @@ namespace Derinor.Application.ServiceImplementations
 
             var client = _httpClientFactory.CreateClient();
             var apiKey = _configuration["Gemini:ApiKey"];
+
+            client.DefaultRequestHeaders.Add("x-goog-api-key", apiKey);
+
             var response = await client.PostAsync(
-                $"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={apiKey}",
-                new StringContent(JsonSerializer.Serialize(new { contents = new[] { new { parts = new[] { new { text = sb.ToString() } } } } }), Encoding.UTF8, "application/json"));
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent",
+                new StringContent(
+                    JsonSerializer.Serialize(new
+                    {
+                        contents = new[] {
+                    new {
+                        parts = new[] {
+                            new { text = sb.ToString() }
+                        }
+                    }
+                        }
+                    }),
+                    Encoding.UTF8,
+                    "application/json"));
 
             response.EnsureSuccessStatusCode();
             var rawJson = await response.Content.ReadAsStringAsync();

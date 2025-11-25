@@ -34,7 +34,7 @@ namespace Derinor.BusinessLogic.ServiceImplementations
             var clientID = _configuration["GithubOAuth:ClientId"];
             var redirectUri = _configuration["GithubOAuth:RedirectUri"];
             var scope = "read:user user:email repo repo:status repo_deployment";
-            return $"https://github.com/login/oauth/authorize?client_id={clientID}&redirect_uri={redirectUri}&scope={scope}";
+            return $"https://github.com/login/oauth/authorize?client_id={clientID}&redirect_uri={redirectUri}&scope={scope}&prompt=select_account";
         }
 
         public async Task<GithubTokenResponse> ExchangeCodeForToken(string code)

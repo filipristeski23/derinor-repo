@@ -11,7 +11,7 @@ namespace Derinor.Application.ServiceInterfaces
 {
     public interface IProjectsService
     {
-        Task<List<ProjectHomeResponseDTO>> AllProjects(string? search);
+        Task<List<ProjectHomeResponseDTO>> AllProjects(string? search, int userID);
 
         Task CreateProject(CreateProjectDetailsRequestDTO projectDetails, int userID);
 

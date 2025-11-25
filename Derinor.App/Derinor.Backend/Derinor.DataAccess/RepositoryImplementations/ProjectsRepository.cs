@@ -18,9 +18,11 @@ namespace Derinor.DataAccess.RepositoryImplementations
             _appDbContext = appDbContext;
         }
 
-        public async Task<List<Projects>> AllProjects(string? search)
+        public async Task<List<Projects>> AllProjects(string? search, int userID)
         {
-            var fetchedProjects = _appDbContext.Projects.AsQueryable();
+            var fetchedProjects = _appDbContext.Projects
+                .Where(p => p.UserID == userID)
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(search))
             {
@@ -28,7 +30,6 @@ namespace Derinor.DataAccess.RepositoryImplementations
             }
 
             fetchedProjects = fetchedProjects.OrderByDescending(p => p.ProjectID);
-
             return await fetchedProjects.ToListAsync();
         }
 

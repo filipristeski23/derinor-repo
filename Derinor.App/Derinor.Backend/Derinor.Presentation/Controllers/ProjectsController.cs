@@ -22,7 +22,8 @@ namespace Derinor.Presentation.Controllers
         [Authorize]
         public async Task<IActionResult> AllProjects([FromQuery] string? search)
         {
-            var fetchedProjects = await _projectsService.AllProjects(search);
+            var userID = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var fetchedProjects = await _projectsService.AllProjects(search, userID);
             return Ok(fetchedProjects);
         }
 
