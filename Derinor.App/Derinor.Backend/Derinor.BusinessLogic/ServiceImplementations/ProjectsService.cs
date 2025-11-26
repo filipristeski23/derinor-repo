@@ -183,10 +183,27 @@ namespace Derinor.Application.ServiceImplementations
             var developmentPeriod = $"Development Period: {request.startDate:yyyy/MM/dd} – {request.endDate:yyyy/MM/dd}";
 
             sb.AppendLine("You are an expert changelog reports writer for a startup.");
-            sb.AppendLine($"The summary should include Finished Work and {developmentPeriod} at the top, then each notable change (commit message and its code differences) should include a title and description about what was changed that will be understandable to a non-technical person.");
-            sb.AppendLine("Please read the following commits and code diffs, then give me a concise summary of notable changes.");
-            sb.AppendLine("Structure the report with clear sections like 'New Features' or 'Bug Fixes'. Do not include sensitive information from the code or commits.");
-            sb.AppendLine("Here is an example format: Finished Work (Development Period: 2025/09/15 – 2025/09/16)\n\n## New Features\n### Enhanced Search Filters\n**What it does:** Users can now quickly narrow down options by selecting filters like cuisine type, price range, and ratings.\n**Impact:** Makes it easier for users to find exactly what they're in the mood for.");
+            sb.AppendLine("STRICT FORMATTING RULES:");
+            sb.AppendLine("1. Do NOT use Markdown symbols like '##', '###', or '**'. use plain text only.");
+            sb.AppendLine("2. Use a single dash '-' to list items or separate sections.");
+            sb.AppendLine("3. Do NOT mention Commit SHAs, IDs, technical hashes, or filenames in the final output.");
+            sb.AppendLine("4. Focus purely on business value and functionality changes.");
+            sb.AppendLine($"The summary should include a header line 'Finished Work' followed by '{developmentPeriod}'.");
+            sb.AppendLine("Group the changes into logical sections (e.g., New Features, Improvements, Bug Fixes).");
+            sb.AppendLine("For each item, provide a simple title and a plain description understandable to a non-technical person.");
+
+            sb.AppendLine("Example Desired Output:");
+            sb.AppendLine("Finished Work");
+            sb.AppendLine("Development Period: 2025/09/15 – 2025/09/16");
+            sb.AppendLine("");
+            sb.AppendLine("- New Features");
+            sb.AppendLine("  Enhanced Search Filters");
+            sb.AppendLine("  Users can now narrow down options by cuisine and price. This makes finding specific items much faster.");
+            sb.AppendLine("");
+            sb.AppendLine("- Bug Fixes");
+            sb.AppendLine("  Login Screen Crash");
+            sb.AppendLine("  Fixed an issue where the app would close unexpectedly on the login screen.");
+            sb.AppendLine("Analyze the following commits and generate the report based on the rules above:");
             sb.AppendLine();
 
             foreach (var commit in commitDetails.AllCommitsData)
