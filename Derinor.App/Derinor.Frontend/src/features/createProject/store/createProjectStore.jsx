@@ -14,12 +14,11 @@ const initialState = {
 
 export const useCreateProjectStore = create((set, get) => ({
   projectData: initialState,
-
+  isCreating: false,
   updateProjectDetails: (details) =>
     set((state) => ({
       projectData: { ...state.projectData, ...details },
     })),
-
   selectRepository: (repo) =>
     set((state) => ({
       projectData: {
@@ -30,7 +29,6 @@ export const useCreateProjectStore = create((set, get) => ({
         },
       },
     })),
-
   selectBranch: (branch) =>
     set((state) => ({
       projectData: {
@@ -41,18 +39,18 @@ export const useCreateProjectStore = create((set, get) => ({
         },
       },
     })),
-
   createProject: async () => {
     const { projectData } = get();
-    console.log("Final Project Data being sent:", projectData);
+    set({ isCreating: true });
     try {
       await api.post("projects/create-project", projectData);
+      set({ isCreating: false });
       return true;
     } catch (error) {
       console.error("Failed to create project:", error);
+      set({ isCreating: false });
       return false;
     }
   },
-
   reset: () => set({ projectData: initialState }),
 }));

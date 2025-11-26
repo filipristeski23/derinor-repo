@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../../app/axiosInstance";
 import { useCreateProjectStore } from "../store/createProjectStore";
+import { useProjectRefreshStore } from "../store/projectRefreshStore";
 import BackToRepositories from "./backToRepositoriesButton";
 
 export default function CreateProjectBranches() {
@@ -14,6 +15,10 @@ export default function CreateProjectBranches() {
   );
   const selectBranch = useCreateProjectStore((state) => state.selectBranch);
   const createProject = useCreateProjectStore((state) => state.createProject);
+  const isCreating = useCreateProjectStore((state) => state.isCreating);
+  const triggerRefresh = useProjectRefreshStore(
+    (state) => state.triggerRefresh
+  );
 
   const [branches, setBranches] = useState([]);
 
@@ -45,6 +50,7 @@ export default function CreateProjectBranches() {
   const handleFinish = async () => {
     const success = await createProject();
     if (success) {
+      triggerRefresh();
       navigate("/projects", { replace: true });
     }
   };
@@ -79,10 +85,10 @@ export default function CreateProjectBranches() {
         <BackToRepositories />
         <button
           onClick={handleFinish}
-          disabled={!productionBranch}
+          disabled={!productionBranch || isCreating}
           className="bg-[#3D6BC6] h-[2.5rem] w-full sm:w-[11.125rem] text-[0.875rem] text-[#F8FAFC] font-semibold cursor-pointer rounded-[0.4rem] disabled:bg-gray-400"
         >
-          Finish
+          {isCreating ? "..." : "Finish"}
         </button>
       </div>
     </div>

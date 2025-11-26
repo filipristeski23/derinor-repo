@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import api from "../../../app/axiosInstance";
+import { useProjectRefreshStore } from "../../createProject/store/projectRefreshStore";
 import SearchIcon from "../../../assets/icons/SearchIcon.svg";
 import PageArrowButton from "../../../assets/icons/PageArrowButton.svg";
 
@@ -8,21 +9,43 @@ function ProjectSectionMainSection() {
   const [searchProjectData, setSearchProjectData] = useState("");
   const [projectData, setProjectData] = useState([]);
   const scrollContainerRef = useRef(null);
+  const refreshTrigger = useProjectRefreshStore(
+    (state) => state.refreshTrigger
+  );
 
   useEffect(() => {
+    let isMounted = true;
     const fetchProjects = async () => {
       try {
-        const response = await api.get("projects/all-projects", {
-          params: searchProjectData ? { search: searchProjectData } : {},
-        });
-        setProjectData(response.data);
+        const params = {
+          _t: new Date().getTime(),
+        };
+        if (searchProjectData) {
+          params.search = searchProjectData;
+        }
+
+        const response = await api.get("projects/all-projects", { params });
+        if (isMounted) {
+          setProjectData(response.data);
+        }
       } catch (error) {
-        setProjectData([]);
+        if (isMounted) {
+          setProjectData([]);
+        }
       }
     };
 
     fetchProjects();
-  }, [searchProjectData]);
+    return () => {
+      isMounted = false;
+    };
+  }, [searchProjectData, refreshTrigger]);
+
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollLeft = 0;
+    }
+  }, [projectData]);
 
   const handleScroll = (direction) => {
     const container = scrollContainerRef.current;
@@ -80,8 +103,8 @@ function ProjectSectionMainSection() {
                       <p className="text-[#23272A] font-medium text-[0.875rem] w-full h-[7rem] leading-[1.75rem]">
                         {project.projectDescription}
                       </p>
-                      <h4 className="font-bold text-[#23272A] text-[0.875rem]">
-                        {project.reports} Reports
+                      <h4 className="font-bold text-[23272A] text-[0.875rem]">
+                        {project.reports ? project.reports : 0} Reports
                       </h4>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-[1rem] px-[1rem] mt-auto">
