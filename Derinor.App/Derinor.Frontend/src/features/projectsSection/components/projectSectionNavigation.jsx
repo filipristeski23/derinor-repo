@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Logo from "../../../assets/images/DerinorLogo.svg";
-import SettingsButton from "../../../components/SettingsButton";
 import LogoutButton from "../../../features/projectsSection/components/LogOutButton";
 
 const HamburgerIcon = (props) => (
@@ -61,7 +60,10 @@ function ProjectSectionNavigation() {
                 </a>
               </li>
               <li>
-                <a href="#features" className="font-semibold whitespace-nowrap">
+                <a
+                  href="mailto:risteski.filip@uklo.edu.mk"
+                  className="font-semibold whitespace-nowrap"
+                >
                   Request Feature
                 </a>
               </li>
@@ -70,7 +72,6 @@ function ProjectSectionNavigation() {
         </div>
 
         <div className="hidden lg:flex items-center gap-[1rem]">
-          <SettingsButton />
           <LogoutButton />
         </div>
 
@@ -86,14 +87,14 @@ function ProjectSectionNavigation() {
             <a href="/projects" className="font-semibold text-[1.25rem]">
               My Projects
             </a>
-            <a href="#features" className="font-semibold text-[1.25rem]">
+            <a
+              href="mailto:risteski.filip@uklo.edu.mk"
+              className="font-semibold text-[1.25rem]"
+            >
               Request Feature
             </a>
             <div className="mt-[1rem]">
               <LogoutButton />
-            </div>
-            <div className="mt-[0.5rem]">
-              <SettingsButton />
             </div>
           </nav>
         </div>

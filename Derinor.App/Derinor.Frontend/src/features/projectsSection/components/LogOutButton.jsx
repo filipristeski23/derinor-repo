@@ -14,7 +14,7 @@ function LogoutButton() {
   return (
     <button
       onClick={handleLogout}
-      className="h-[2.5rem] pl-[1.5rem] pr-[1.5rem] text-[0.875rem] text-[#3D6BC6] font-semibold cursor-pointer rounded-[0.4rem] hover:bg-gray-100"
+      className="h-[2.5rem] pl-[1.5rem] pr-[1.5rem] text-[0.875rem] text-[#3D6BC6] font-semibold cursor-pointer rounded-[0.4rem] bg-gray-100"
     >
       Log Out
     </button>
