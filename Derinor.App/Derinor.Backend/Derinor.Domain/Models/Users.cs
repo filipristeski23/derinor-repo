@@ -21,7 +21,7 @@ namespace Derinor.Domain.Models
         public int GithubID { get; set; }
         public string GithubUsername { get; set; }
         public string GithubAccessToken { get; set; }
-
+        public UserPlan Plan { get; set; }
         public ICollection<Projects> Projects { get; set; }
 
         

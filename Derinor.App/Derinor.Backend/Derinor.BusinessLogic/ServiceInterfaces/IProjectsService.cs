@@ -24,7 +24,7 @@ namespace Derinor.Application.ServiceInterfaces
 
         Task<List<GithubBranchesResponseDTO>> FetchBranches(int userID, string repositoryName);
 
-        Task PublishProject(PublishProjectDTO publishProjectDTO);
+        Task PublishProject(PublishProjectDTO publishProjectDTO, int userID);
 
         Task<List<ProjectReportDTO>> GetReportsByProject(int projectID);
     }

@@ -46,6 +46,13 @@ namespace Derinor.Application.ServiceImplementations
 
         public async Task CreateProject(CreateProjectDetailsRequestDTO projectDetails, int userID)
         {
+            var user = await _userRepository.GetUserById(userID);
+            var currentProjects = await _projectsRepository.CountProjects(userID);
+            var allowedProjects = PlanLimits.GetMaxProjects(user.Plan);
+            if (currentProjects >= allowedProjects)
+                throw new Exception("PLAN_LIMIT_REACHED");
+
+
             var newProject = new Projects
             {
                 ProjectOwner = projectDetails.projectOwner,
@@ -303,8 +310,16 @@ namespace Derinor.Application.ServiceImplementations
             return branches.Select(b => new GithubBranchesResponseDTO { name = b.name, githubCommitDTO = new GithubCommitDTO { sha = b.githubCommitDTO.sha } }).ToList();
         }
 
-        public async Task PublishProject(PublishProjectDTO publishProjectDTO)
+        public async Task PublishProject(PublishProjectDTO publishProjectDTO, int userID)
         {
+            var user = await _userRepository.GetUserById(userID);
+            var currentReports = await _projectsRepository.CountReports(publishProjectDTO.projectID);
+            var allowedReports = PlanLimits.GetMaxReports(user.Plan);
+
+            if (currentReports >= allowedReports)
+                throw new Exception("REPORT_LIMIT_REACHED");
+
+
             var publishProject = new ProjectReports
             {
                 ProjectID = publishProjectDTO.projectID,

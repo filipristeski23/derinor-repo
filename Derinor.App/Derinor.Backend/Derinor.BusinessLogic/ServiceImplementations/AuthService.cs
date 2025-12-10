@@ -29,12 +29,12 @@ namespace Derinor.BusinessLogic.ServiceImplementations
             _userRepository = userRepository;
         }
 
-        public string OpenGithub()
+        public string OpenGithub(string state)
         {
             var clientID = _configuration["GithubOAuth:ClientId"];
             var redirectUri = _configuration["GithubOAuth:RedirectUri"];
             var scope = "read:user user:email repo repo:status repo_deployment";
-            return $"https://github.com/login/oauth/authorize?client_id={clientID}&redirect_uri={redirectUri}&scope={scope}&prompt=select_account";
+            return $"https://github.com/login/oauth/authorize?client_id={clientID}&redirect_uri={redirectUri}&scope={scope}&state={state}&prompt=select_account";
         }
 
         public async Task<GithubTokenResponse> ExchangeCodeForToken(string code)
@@ -61,7 +61,7 @@ namespace Derinor.BusinessLogic.ServiceImplementations
             return tokenResponse;
         }
 
-        public async Task<string> GetOrCreateUserFromGithubToken(GithubTokenResponse githubTokenResponse)
+        public async Task<string> GetOrCreateUserFromGithubToken(GithubTokenResponse githubTokenResponse, string state)
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", githubTokenResponse.AccessToken);
@@ -83,12 +83,16 @@ namespace Derinor.BusinessLogic.ServiceImplementations
 
             if (user == null)
             {
+                if (string.IsNullOrEmpty(state))
+                    return "NO_PLAN";
+
                 var newUser = new Users
                 {
                     GithubID = githubID,
                     FullName = fullName,
                     GithubAccessToken = accessToken,
                     GithubUsername = githubUsername,
+                    Plan = Enum.Parse<UserPlan>(state),
                 };
 
                 user = await _userRepository.AddUser(newUser);
@@ -98,7 +102,15 @@ namespace Derinor.BusinessLogic.ServiceImplementations
                 user.FullName = fullName;
                 user.GithubAccessToken = accessToken;
                 user.GithubUsername = githubUsername;
+
+                if (!string.IsNullOrEmpty(state))
+                    user.Plan = Enum.Parse<UserPlan>(state);
+
                 await _userRepository.UpdateUser(user);
+
+               
+                if (!Enum.IsDefined(typeof(UserPlan), user.Plan) || user.Plan == UserPlan.NoPlan)
+                    return "NO_PLAN";
             }
 
             return await GenerateJwtToken(user);

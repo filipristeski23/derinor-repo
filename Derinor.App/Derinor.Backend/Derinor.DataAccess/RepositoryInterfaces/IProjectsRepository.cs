@@ -18,5 +18,8 @@ namespace Derinor.DataAccess.RepositoryInterfaces
         Task PublishProject(ProjectReports projectReports);
 
         Task<List<ProjectReports>> GetReportsByProject(int projectID);
+        Task<int> CountProjects(int userID);
+        Task<int> CountReports(int projectID);
+
     }
 }

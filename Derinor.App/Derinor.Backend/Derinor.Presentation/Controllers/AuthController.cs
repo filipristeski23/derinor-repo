@@ -1,4 +1,5 @@
 ﻿using Derinor.BusinessLogic.ServiceInterfaces;
+using Derinor.Common.RequestDTOs;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
@@ -28,7 +29,7 @@ namespace Derinor.Presentation.Controllers
             try
             {
 
-                var githubUrl = _authService.OpenGithub();
+                var githubUrl = _authService.OpenGithub(null);
                 return Redirect(githubUrl);
 
             }
@@ -43,7 +44,7 @@ namespace Derinor.Presentation.Controllers
         }
 
         [HttpGet("github-callback")]
-        public async Task<IActionResult> GithubCallback([FromQuery] string code)
+        public async Task<IActionResult> GithubCallback([FromQuery] string code, [FromQuery] string state)
         {
             try
             {
@@ -54,7 +55,11 @@ namespace Derinor.Presentation.Controllers
                     return BadRequest("Something went wrong signing in with github");
                 }
 
-                var jwt = await _authService.GetOrCreateUserFromGithubToken(tokenResponse);
+                var jwt = await _authService.GetOrCreateUserFromGithubToken(tokenResponse, state);
+
+                if (jwt == "NO_PLAN")
+                    return BadRequest("Please go to the pricing page and choose a plan.");
+
                 var user = new
                 {
                     name = "Filip",
@@ -72,5 +77,13 @@ namespace Derinor.Presentation.Controllers
 
 
         }
+
+        [HttpGet("select-plan")]
+        public IActionResult SelectPlan([FromQuery] string plan)
+        {
+            var githubUrl = _authService.OpenGithub(plan);
+            return Redirect(githubUrl);
+        }
+
     }
 }

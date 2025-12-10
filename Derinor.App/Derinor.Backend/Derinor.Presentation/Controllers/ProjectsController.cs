@@ -34,8 +34,18 @@ namespace Derinor.Presentation.Controllers
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             var userID = int.Parse(userIdClaim.Value);
 
-            await _projectsService.CreateProject(projectDetails, userID);
-            return Ok("Project Created Successfully");
+            try
+            {
+                await _projectsService.CreateProject(projectDetails, userID);
+                return Ok("Project Created Successfully");
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message == "PLAN_LIMIT_REACHED")
+                    return BadRequest("Plan limit reached");
+
+                throw;
+            }
         }
 
         [HttpPost("get-gemini-data")]
@@ -88,8 +98,20 @@ namespace Derinor.Presentation.Controllers
         public async Task<IActionResult> PublishProject([FromBody] PublishProjectDTO publishProjectDTO)
         {
 
-            await _projectsService.PublishProject(publishProjectDTO);
-            return Ok("Project Published Successfully");
+            var userID = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            try
+            {
+                await _projectsService.PublishProject(publishProjectDTO, userID);
+                return Ok("Project Published Successfully");
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message == "REPORT_LIMIT_REACHED")
+                    return BadRequest("Report limit reached");
+
+                throw;
+            }
         }
 
         [HttpGet("all-by-project/{projectID}")]

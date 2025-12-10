@@ -10,9 +10,9 @@ namespace Derinor.BusinessLogic.ServiceInterfaces
 {
     public interface IAuthService
     {
-        string OpenGithub();
+        string OpenGithub(string state);
 
-        Task<string> GetOrCreateUserFromGithubToken(GithubTokenResponse githubTokenResponse);
+        Task<string> GetOrCreateUserFromGithubToken(GithubTokenResponse githubTokenResponse, string state);
 
         Task<string> GenerateJwtToken(Users user);
 

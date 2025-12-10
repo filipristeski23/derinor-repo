@@ -57,5 +57,15 @@ namespace Derinor.DataAccess.RepositoryImplementations
             return await _appDbContext.ProjectReports.Where(r => r.ProjectID == projectID).ToListAsync();
         }
 
+        public Task<int> CountProjects(int userID)
+        {
+            return _appDbContext.Projects.CountAsync(p => p.UserID == userID);
+        }
+
+        public Task<int> CountReports(int projectID)
+        {
+            return _appDbContext.ProjectReports.CountAsync(r => r.ProjectID == projectID);
+        }
+
     }
 }

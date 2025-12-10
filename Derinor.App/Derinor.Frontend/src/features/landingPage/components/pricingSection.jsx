@@ -44,7 +44,7 @@ export default function PricingSection() {
                     Publish Page Per Project
                   </h5>
                 </div>
-                <GetStartedButtonPricing />
+                <GetStartedButtonPricing plan="Starter" />
               </div>
             </div>
           </div>
@@ -73,7 +73,7 @@ export default function PricingSection() {
                     Publish Page Per Project
                   </h5>
                 </div>
-                <GetStartedButtonPricing />
+                <GetStartedButtonPricing plan="Business" />
               </div>
             </div>
           </div>
@@ -106,7 +106,7 @@ export default function PricingSection() {
                     Publish Page Per Project
                   </h5>
                 </div>
-                <GetStartedButtonPricing />
+                <GetStartedButtonPricing plan="Enterprise" />
               </div>
             </div>
           </div>

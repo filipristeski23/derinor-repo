@@ -13,9 +13,8 @@ namespace Derinor.DataAccess.RepositoryInterfaces
         Task UpdateUser(Users user);
         Task<Users> GetByGithubID(int githubID);
         Task<Projects> GetFetchingDetails(int userID, int projectID);
-
         Task<Users> GetUsernameByUserID(int userID);
+        Task<Users> GetUserById(int userID);
 
-        
     }
 }

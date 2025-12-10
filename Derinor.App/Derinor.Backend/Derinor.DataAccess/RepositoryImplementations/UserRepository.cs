@@ -63,5 +63,13 @@ namespace Derinor.DataAccess.RepositoryImplementations
                 .FirstOrDefaultAsync();
             return data;
         }
+
+        public async Task<Users> GetUserById(int userID)
+        {
+            return await _appDbContext.Users
+                .Where(u => u.UserID == userID)
+                .FirstOrDefaultAsync();
+        }
+
     }
 }
