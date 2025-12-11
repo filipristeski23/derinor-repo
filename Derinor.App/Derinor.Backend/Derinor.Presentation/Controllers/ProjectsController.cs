@@ -102,15 +102,12 @@ namespace Derinor.Presentation.Controllers
 
             try
             {
-                await _projectsService.PublishProject(publishProjectDTO, userID);
+                await _projectsService.PublishProject(publishProjectDTO);
                 return Ok("Project Published Successfully");
             }
             catch (Exception ex)
             {
-                if (ex.Message == "REPORT_LIMIT_REACHED")
-                    return BadRequest("Report limit reached");
-
-                throw;
+                return BadRequest("Something went wrong with publishing project");
             }
         }
 

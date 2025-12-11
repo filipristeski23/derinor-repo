@@ -48,8 +48,18 @@ export const useCreateProjectStore = create((set, get) => ({
       return true;
     } catch (error) {
       console.error("Failed to create project:", error);
+
+      const msg =
+  typeof error.response?.data === "string"
+    ? error.response.data
+    : error.response?.data?.message ||
+      error.response?.data?.error ||
+      "An error occurred";
+
+alert(msg);
+
       set({ isCreating: false });
-      return false;
+      return { success: false, error: true };
     }
   },
   reset: () => set({ projectData: initialState }),

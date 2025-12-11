@@ -63,8 +63,8 @@ export default function FeaturesSection() {
                   Generate Reports
                 </h2>
                 <h3 className="text-[1rem] text-[#23272A] font-medium leadin-[1.5rem]">
-                  From the chosen branches, generate and edit immaculate reports
-                  that everyone can understand.
+                  From the chosen branches, generate. edit and publish immaculate reports
+                  that everyone can understand without a problem.
                 </h3>
               </div>
             </div>

@@ -13,18 +13,7 @@ namespace Derinor.Domain.Models
             return plan switch
             {
                 UserPlan.Starter => 5,
-                UserPlan.Business => 25,
-                UserPlan.Enterprise => int.MaxValue,
-                _ => 0
-            };
-        }
-
-        public static int GetMaxReports(UserPlan plan)
-        {
-            return plan switch
-            {
-                UserPlan.Starter => 25,
-                UserPlan.Business => 100,
+                UserPlan.Business => 6,
                 UserPlan.Enterprise => int.MaxValue,
                 _ => 0
             };

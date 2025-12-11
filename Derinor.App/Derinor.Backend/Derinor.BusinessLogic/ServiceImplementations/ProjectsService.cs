@@ -124,6 +124,8 @@ namespace Derinor.Application.ServiceImplementations
 
         public async Task<GeneratedReportDataRequestDTO> GenerateReport(int userID, GenerateReportRequestDTO request, Projects fetchDetails)
         {
+
+            Console.WriteLine($"=== STARTING REPORT GENERATION ===");
             var commits = await GetGithubCommits(userID, request.projectID, request.startDate, request.endDate, fetchDetails);
             var client = _httpClientFactory.CreateClient();
 
@@ -141,7 +143,25 @@ namespace Derinor.Application.ServiceImplementations
                 {
                     if (commit?.Sha == null) return null;
                     var detailUrl = $"https://api.github.com/repos/{fetchDetails.Users.GithubUsername}/{repo}/commits/{commit.Sha}";
+                    Console.WriteLine($"Fetching commit details: {commit.Sha}");
                     var resp = await client.GetAsync(detailUrl);
+
+                    // Check rate limits BEFORE EnsureSuccessStatusCode
+                    if (resp.Headers.TryGetValues("X-RateLimit-Remaining", out var remaining))
+                    {
+                        Console.WriteLine($"GitHub Rate Limit Remaining: {remaining.FirstOrDefault()}");
+                    }
+                    if (resp.Headers.TryGetValues("X-RateLimit-Reset", out var reset))
+                    {
+                        Console.WriteLine($"GitHub Rate Limit Reset: {reset.FirstOrDefault()}");
+                    }
+
+                    if (resp.StatusCode == System.Net.HttpStatusCode.TooManyRequests)
+                    {
+                        Console.WriteLine($"!!! HIT GITHUB RATE LIMIT !!!");
+                        throw new HttpRequestException($"GitHub API rate limit exceeded. Response: {await resp.Content.ReadAsStringAsync()}");
+                    }
+
                     resp.EnsureSuccessStatusCode();
                     var json = await resp.Content.ReadAsStringAsync();
                     using var doc = JsonDocument.Parse(json);
@@ -168,6 +188,7 @@ namespace Derinor.Application.ServiceImplementations
 
             var results = await Task.WhenAll(tasks);
             analysisInputs.AddRange(results.Where(r => r != null && !string.IsNullOrWhiteSpace(r.Patch)));
+            Console.WriteLine($"Successfully processed {analysisInputs.Count} commits with patches");
             return new GeneratedReportDataRequestDTO { AllCommitsData = analysisInputs };
         }
 
@@ -224,13 +245,19 @@ namespace Derinor.Application.ServiceImplementations
                 sb.AppendLine(new string('-', 40));
             }
 
+            Console.WriteLine($"=== GEMINI REQUEST DEBUG ===");
+            Console.WriteLine($"About to call Gemini with {commitDetails.AllCommitsData.Count} commits");
+            Console.WriteLine($"Total payload characters: {sb.Length}");
+            Console.WriteLine($"Estimated tokens: ~{sb.Length / 4}");
+            Console.WriteLine($"============================");
+
             var client = _httpClientFactory.CreateClient();
             var apiKey = _configuration["Gemini:ApiKey"];
 
             client.DefaultRequestHeaders.Add("x-goog-api-key", apiKey);
 
             var response = await client.PostAsync(
-                "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent",
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent",
                 new StringContent(
                     JsonSerializer.Serialize(new
                     {
@@ -245,7 +272,17 @@ namespace Derinor.Application.ServiceImplementations
                     Encoding.UTF8,
                     "application/json"));
 
-            response.EnsureSuccessStatusCode();
+            Console.WriteLine($"Gemini Response Status: {response.StatusCode}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"=== GEMINI ERROR DETAILS ===");
+                Console.WriteLine(errorContent);
+                Console.WriteLine($"============================");
+                throw new HttpRequestException($"Gemini API returned {response.StatusCode}: {errorContent}");
+            }
+
             var rawJson = await response.Content.ReadAsStringAsync();
             using var doc = JsonDocument.Parse(rawJson);
 
@@ -310,15 +347,8 @@ namespace Derinor.Application.ServiceImplementations
             return branches.Select(b => new GithubBranchesResponseDTO { name = b.name, githubCommitDTO = new GithubCommitDTO { sha = b.githubCommitDTO.sha } }).ToList();
         }
 
-        public async Task PublishProject(PublishProjectDTO publishProjectDTO, int userID)
+        public async Task PublishProject(PublishProjectDTO publishProjectDTO)
         {
-            var user = await _userRepository.GetUserById(userID);
-            var currentReports = await _projectsRepository.CountReports(publishProjectDTO.projectID);
-            var allowedReports = PlanLimits.GetMaxReports(user.Plan);
-
-            if (currentReports >= allowedReports)
-                throw new Exception("REPORT_LIMIT_REACHED");
-
 
             var publishProject = new ProjectReports
             {
@@ -340,7 +370,7 @@ namespace Derinor.Application.ServiceImplementations
                 projectReportID = p.ProjectID,
                 projectReportDescription = p.ProjectReportDescription
             }).ToList();
-
+            
             return projectDtos;
         }
     }

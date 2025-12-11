@@ -15,7 +15,7 @@ export default function PricingSection() {
           </h2>
           <h3 className="text-[1rem] md:text-[1.25rem] font-medium text-center w-full max-w-[40.625rem]">
             Currently we are under beta and everyone can use the app for free,
-            when beta expired pricing down applies
+            when beta expires pricing down applies
           </h3>
         </div>
         <div className="w-full flex flex-col lg:flex-row items-center lg:items-stretch gap-[2.5rem] justify-center mt-[3.5rem]">
@@ -35,7 +35,7 @@ export default function PricingSection() {
                 <div className="flex gap-[0.5rem]">
                   <img src={CheckMark} alt="check mark" />
                   <h5 className="text-[0.875rem] font-medium ">
-                    25 Reports Per Day Total
+                    Unlimited Reports Per Project
                   </h5>
                 </div>
                 <div className="flex gap-[0.5rem] items-center">
@@ -64,7 +64,7 @@ export default function PricingSection() {
                 <div className="flex gap-[0.5rem]">
                   <img src={CheckMark} alt="check mark" />
                   <h5 className="text-[0.875rem] font-medium ">
-                    100 Reports Per Day Total
+                    Unlimited Reports Per Project
                   </h5>
                 </div>
                 <div className="flex gap-[0.5rem] items-center">
@@ -95,9 +95,9 @@ export default function PricingSection() {
                   </h5>
                 </div>
                 <div className="flex gap-[0.5rem]">
-                  <img src={CheckMark} alt="check mark" />
+                  <img src={CheckMark} alt="check mark" />  
                   <h5 className="text-[0.875rem] font-medium ">
-                    Unlimited Reports
+                    Unlimited Reports Per Project
                   </h5>
                 </div>
                 <div className="flex gap-[0.5rem] items-center">
