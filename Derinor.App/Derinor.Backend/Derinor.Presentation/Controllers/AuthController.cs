@@ -21,7 +21,9 @@ namespace Derinor.Presentation.Controllers
 
         }
 
-
+        /// <summary>
+        /// This endpoint is used to access github to login or signup
+        /// </summary>
         [HttpGet("github-signin")]
         public IActionResult OpenGithub()
         {
@@ -43,6 +45,9 @@ namespace Derinor.Presentation.Controllers
 
         }
 
+        /// <summary>
+        /// This endpoint is used for github to callback our app after authorization.
+        /// </summary>
         [HttpGet("github-callback")]
         public async Task<IActionResult> GithubCallback([FromQuery] string code, [FromQuery] string state)
         {
@@ -78,6 +83,9 @@ namespace Derinor.Presentation.Controllers
 
         }
 
+        /// <summary>
+        /// This endpoint is used to change the plan for a user.
+        /// </summary>
         [HttpGet("select-plan")]
         public IActionResult SelectPlan([FromQuery] string plan)
         {

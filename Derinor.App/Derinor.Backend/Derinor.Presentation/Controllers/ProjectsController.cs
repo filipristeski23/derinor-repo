@@ -18,6 +18,9 @@ namespace Derinor.Presentation.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// This endpoint gets all projects for specific user.
+        /// </summary>
         [HttpGet("all-projects")]
         [Authorize]
         public async Task<IActionResult> AllProjects([FromQuery] string? search)
@@ -27,6 +30,9 @@ namespace Derinor.Presentation.Controllers
             return Ok(fetchedProjects);
         }
 
+        /// <summary>
+        /// This endpoint creates new project.
+        /// </summary>
         [HttpPost("create-project")]
         [Authorize]
         public async Task<IActionResult> CreateProject([FromBody] CreateProjectDetailsRequestDTO projectDetails)
@@ -48,6 +54,9 @@ namespace Derinor.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// This endpoint fetches github data for some project and sends it to gemini for processing.
+        /// </summary>
         [HttpPost("get-gemini-data")]
         [Authorize]
         public async Task<IActionResult> GetGeminiData([FromBody] GenerateReportRequestDTO request)
@@ -71,6 +80,9 @@ namespace Derinor.Presentation.Controllers
             return Ok(generatedReport);
         }
 
+        /// <summary>
+        /// This endpoint gets all repositories to show for project.
+        /// </summary>
         [HttpGet("fetch-repositories")]
         [Authorize]
         public async Task<IActionResult> FetchRepositories()
@@ -82,6 +94,9 @@ namespace Derinor.Presentation.Controllers
             return Ok(fetchedRepositories);
         }
 
+        /// <summary>
+        /// This endpoint gets all branches to show for project.
+        /// </summary>
         [HttpGet("fetch-branches")]
         [Authorize]
         public async Task<IActionResult> FetchBranches([FromQuery] string repositoryName)
@@ -93,6 +108,9 @@ namespace Derinor.Presentation.Controllers
             return Ok(fetchedBranches);
         }
 
+        /// <summary>
+        /// This endpoint publishes the report to the dedicated page.
+        /// </summary>
         [HttpPost("publish-report")]
         [Authorize]
         public async Task<IActionResult> PublishProject([FromBody] PublishProjectDTO publishProjectDTO)
@@ -111,6 +129,9 @@ namespace Derinor.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// This endpoint gets all project reports.
+        /// </summary>
         [HttpGet("all-by-project/{projectID}")]
         public async Task<IActionResult> GetReportsByProject(int projectID)
         {
