@@ -103,9 +103,6 @@ function ProjectSectionMainSection() {
                       <p className="text-[#23272A] font-medium text-[0.875rem] w-full h-[7rem] leading-[1.75rem]">
                         {project.projectDescription}
                       </p>
-                      <h4 className="font-bold text-[23272A] text-[0.875rem]">
-                        {project.reports ? project.reports : 0} Reports
-                      </h4>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-[1rem] px-[1rem] mt-auto">
                       <Link
